@@ -14,13 +14,16 @@ class MainActivity : AppCompatActivity() {
     lateinit var drawerLayout: DrawerLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
 
         drawerLayout = binding.myDrawer
+
         val navController = this.findNavController(R.id.myNavHost)
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
         NavigationUI.setupWithNavController(binding.myNavView, navController)
+
 
 
 
@@ -36,6 +39,9 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
+
+        binding.myNavView.
 
 
 

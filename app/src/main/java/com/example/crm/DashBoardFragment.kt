@@ -16,12 +16,16 @@ class DashBoardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-var binding : FragmentDashBoardBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_dash_board,container,false)
+val binding : FragmentDashBoardBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_dash_board,container,false)
 
     binding.button3.setOnClickListener {
         SharedPrefManager.getInstance(requireActivity().applicationContext).logout()
         requireActivity().finish()
     }
+
+        if (SharedPrefManager.getInstance(requireActivity().applicationContext).isLoggedIn) {
+   binding.textView9.text = SharedPrefManager.getInstance(requireActivity().applicationContext).user.firstName
+        }
 
 
     return binding.root}

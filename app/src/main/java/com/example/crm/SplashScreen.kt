@@ -27,9 +27,8 @@ class SplashScreen : AppCompatActivity() {
 
         s.addAnimation(zoom_anim)
         s.addAnimation(spin_anim)
-        binding.logo.startAnimation(s)
 
-        binding.heading.animation=title_anim
+        binding.logo.startAnimation(s)
 
         Handler().postDelayed({
             startActivity(Intent(this, MainActivity::class.java))

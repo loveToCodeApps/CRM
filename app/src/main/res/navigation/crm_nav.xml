@@ -10,4 +10,9 @@
         android:name="com.example.crm.DashBoardFragment"
         android:label="Dashboard"
         tools:layout="@layout/fragment_dash_board" />
+    <fragment
+        android:id="@+id/activitiesFragment"
+        android:name="com.example.crm.ActivitiesFragment"
+        android:label="Add New Activity"
+        tools:layout="@layout/fragment_activities" />
 </navigation>
