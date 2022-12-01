@@ -18,17 +18,10 @@ class SplashScreen : AppCompatActivity() {
         supportActionBar?.hide()
 
         val zoom_anim = AnimationUtils.loadAnimation(this,R.anim.zoom_in)
-        val spin_anim = AnimationUtils.loadAnimation(this,R.anim.rotate)
-        val title_anim = AnimationUtils.loadAnimation(this,R.anim.left_to_center)
+//        val spin_anim = AnimationUtils.loadAnimation(this,R.anim.rotate)
+//        val title_anim = AnimationUtils.loadAnimation(this,R.anim.left_to_center)
 //        binding.logo.animation=logoAnim
-
-        val s = AnimationSet(false)
-        //false means don't share interpolators
-
-        s.addAnimation(zoom_anim)
-        s.addAnimation(spin_anim)
-
-        binding.logo.startAnimation(s)
+        binding.logo.animation=zoom_anim
 
         Handler().postDelayed({
             startActivity(Intent(this, MainActivity::class.java))

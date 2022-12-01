@@ -2,4 +2,15 @@
     <string name="app_name">Crm</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="roles">
+        <item>Admin</item>
+        <item>Executive</item>
+    </string-array>
+    <string-array name="status">
+        <item>in progress</item>
+        <item>completed</item>
+        <item>cancelled</item>
+    </string-array>
+    <string name="app_name_new">AndroidNotification</string>
+    <string name="notification_activity">NotificationView</string>
 </resources>

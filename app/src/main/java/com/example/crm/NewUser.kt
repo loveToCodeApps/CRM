@@ -1,6 +1,6 @@
 package com.example.crm
 
-data class User(
+data class NewUser(
     var id: Int,
     var firstName: String,
     var lastName: String,
@@ -10,7 +10,6 @@ data class User(
     var state:String,
     var city:String,
     var pincode:String,
-    var role:String
-
+    var role : String
 
 )

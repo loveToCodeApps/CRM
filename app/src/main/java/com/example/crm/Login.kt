@@ -22,18 +22,21 @@ class Login : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        binding.regis.setOnClickListener {
-            finish()
-            startActivity(Intent(this, Registration::class.java))
-        }
-
-
         // check if already logged in or not
         if (SharedPrefManager.getInstance(this).isLoggedIn) {
             finish()
             startActivity(Intent(this, MainActivity::class.java))
             return
         }
+
+
+        binding.regis.setOnClickListener {
+            finish()
+            startActivity(Intent(this, Registration::class.java))
+        }
+
+
+
 
         //login button
         binding.login.setOnClickListener {
@@ -96,7 +99,10 @@ class Login : AppCompatActivity() {
                                 userJson.getString("address"),
                                 userJson.getString("state"),
                                 userJson.getString("city"),
-                                userJson.getString("pincode")
+                                userJson.getString("pincode"),
+                                userJson.getString("role")
+
+
                             )
 
                             //storing the user in shared preferences

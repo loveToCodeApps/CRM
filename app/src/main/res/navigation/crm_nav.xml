@@ -3,16 +3,51 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/crm_nav"
-    app:startDestination="@id/dashBoardFragment">
+    app:startDestination="@id/dashBoard">
 
     <fragment
-        android:id="@+id/dashBoardFragment"
+        android:id="@+id/dashBoard"
         android:name="com.example.crm.DashBoardFragment"
         android:label="Dashboard"
-        tools:layout="@layout/fragment_dash_board" />
+        tools:layout="@layout/fragment_dash_board" >
+        <argument
+            android:name="activityCount"
+            app:argType="string" />
+    </fragment>
     <fragment
-        android:id="@+id/activitiesFragment"
+        android:id="@+id/activities"
         android:name="com.example.crm.ActivitiesFragment"
         android:label="Add New Activity"
         tools:layout="@layout/fragment_activities" />
+    <fragment
+        android:id="@+id/addUserFragment"
+        android:name="com.example.crm.AddUserFragment"
+        android:label="Add User"
+        tools:layout="@layout/fragment_add_user" />
+    <fragment
+        android:id="@+id/myActivityFragment"
+        android:name="com.example.crm.MyActivityFragment"
+        android:label="My Activities"
+        tools:layout="@layout/fragment_my_activity" >
+        <action
+            android:id="@+id/action_myActivityFragment_to_editMyActivitiesFragment"
+            app:destination="@id/editMyActivitiesFragment" />
+        <action
+            android:id="@+id/action_myActivityFragment_to_dashBoard"
+            app:destination="@id/dashBoard" />
+    </fragment>
+    <fragment
+        android:id="@+id/editMyActivitiesFragment"
+        android:name="com.example.crm.EditMyActivitiesFragment"
+        android:label="Edit Activity"
+        tools:layout="@layout/fragment_edit_my_activities">
+        <argument
+            android:name="oldData"
+            app:argType="com.example.crm.MyActivitiesData" />
+    </fragment>
+    <fragment
+        android:id="@+id/upcomingActivitiesFragment"
+        android:name="com.example.crm.UpcomingActivitiesFragment"
+        android:label="Upcoming Activities"
+        tools:layout="@layout/fragment_upcoming_activities" />
 </navigation>

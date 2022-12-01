@@ -3,16 +3,21 @@
 <group
     android:id="@+id/first">
     <item
-        android:id="@+id/dashBoardFragment"
+        android:id="@+id/dashBoard"
         android:icon="@drawable/ic_baseline_dashboard_24"
         android:title="Dashboard" />
     <item
-        android:id="@+id/activitiesFragment"
+        android:id="@+id/activities"
         android:icon="@drawable/ic_baseline_edit_24"
         android:title="Add New Activity" />
     <item
+        android:id="@+id/myActivityFragment"
         android:icon="@drawable/ic_baseline_task_alt_24"
         android:title="My Activities" />
+    <item
+        android:id="@+id/add_user"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:title="Add User" />
 </group>
 
     <group

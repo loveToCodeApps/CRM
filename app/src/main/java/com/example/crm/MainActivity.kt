@@ -1,21 +1,33 @@
 package com.example.crm
 
+
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.crm.databinding.ActivityMainBinding
+import java.util.Calendar
+
 
 class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
+   lateinit var binding : ActivityMainBinding
     lateinit var drawerLayout: DrawerLayout
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
 
 
         drawerLayout = binding.myDrawer
@@ -28,29 +40,70 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    if (SharedPrefManager.getInstance(this).isLoggedIn)
-    {
-        val user = SharedPrefManager.getInstance(this).user
+
+
+        if (SharedPrefManager.getInstance(this).isLoggedIn) {
+            val user = SharedPrefManager.getInstance(this).user
+        } else {
+            val intent = Intent(this@MainActivity, Login::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+
+
+        binding.myNavView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.logout -> {
+                    SharedPrefManager.getInstance(this).logout()
+                    finish()
+                }
+                R.id.dashBoard -> {
+                    findNavController(R.id.myNavHost)
+                        .navigate(R.id.dashBoard)
+                    binding.myDrawer.closeDrawer(GravityCompat.START, true)
+                }
+                R.id.activities -> {
+                    findNavController(R.id.myNavHost).navigate(R.id.activities)
+                    binding.myDrawer.closeDrawer(GravityCompat.START, true)
+                }
+                R.id.myActivityFragment -> {
+                    findNavController(R.id.myNavHost).navigate(R.id.myActivityFragment)
+                    binding.myDrawer.closeDrawer(GravityCompat.START, true)
+                }
+                R.id.add_user -> {
+                    findNavController(R.id.myNavHost).navigate(R.id.addUserFragment)
+                    binding.myDrawer.closeDrawer(GravityCompat.START, true)
+
+                }
+
+            }
+            true
+        }
+
+
+        // Hide Add User Tab if role of user is Executive.
+        val nav_Menu: Menu = binding.myNavView.menu
+        if (SharedPrefManager.getInstance(this).user.role == "Executive") {
+            nav_Menu.findItem(R.id.add_user).isVisible = false
+        }
+
+        // user name in the navigation drawer
+        val headerView = binding.myNavView.getHeaderView(0)
+        val username = headerView.findViewById<TextView>(R.id.username)
+      val usernames = SharedPrefManager.getInstance(this).user.firstName + " " + SharedPrefManager.getInstance(this).user.lastName
+
+        username.text = usernames
+
+
     }
 
-    else
-    {
-        val intent = Intent(this@MainActivity, Login::class.java)
-        startActivity(intent)
-        finish()
-    }
-
-
-        binding.myNavView.
-
-
-
-
-    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = this.findNavController(R.id.myNavHost)
 
         return NavigationUI.navigateUp(navController, drawerLayout)
     }
+
+
 }

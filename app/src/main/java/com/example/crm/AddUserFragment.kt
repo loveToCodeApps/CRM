@@ -1,58 +1,57 @@
 package com.example.crm
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
-import com.example.crm.databinding.ActivityRegistrationBinding
+import com.example.crm.databinding.FragmentAddUserBinding
 import org.json.JSONException
 import org.json.JSONObject
 
-class Registration : AppCompatActivity() {
-   lateinit var binding : ActivityRegistrationBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-binding = DataBindingUtil.setContentView(this,R.layout.activity_registration)
+class AddUserFragment : Fragment() {
 
-        supportActionBar?.hide()
+lateinit var binding : FragmentAddUserBinding
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+ binding  = DataBindingUtil.inflate(inflater,R.layout.fragment_add_user,container,false)
 
-        val roles = resources.getStringArray(R.array.roles)
-        val arrayAdapter = ArrayAdapter(this,R.layout.dropdown_layout,roles)
-        // Here don't use binding.autocompletetv.adapter = adapter
+
+val roles = resources.getStringArray(R.array.roles)
+val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_layout,roles)
+
+
+ // Here don't use binding.autocompletetv.adapter = adapter
         //it will give u error , instead use setAdapter()
-        binding.editTextTextPersonName10.setAdapter(arrayAdapter)
+    binding.editTextTextPersonName10.setAdapter(arrayAdapter)
 
-
-
-        binding.textView2.setOnClickListener {
-            finish()
-            startActivity(Intent(this,Login::class.java))
-        }
-
-        //if the user is already logged in we will directly start the MainActivity (profile) activity
-        if (SharedPrefManager.getInstance(this).isLoggedIn) {
-            finish()
-            startActivity(Intent(this, MainActivity::class.java))
-            return
-        }
 
         binding.button2.setOnClickListener {
-            registerUser()
+            addUser()
         }
+
+
+
+        return  binding.root
 
 
 
     }
 
-    private fun registerUser() {
+    private fun addUser() {
         val firstname = binding.editTextTextPersonName.text!!.trim()
         val lastname = binding.editTextTextPersonName2.text!!.trim()
         val email = binding.editTextTextPersonName4.text!!.trim()
@@ -63,7 +62,6 @@ binding = DataBindingUtil.setContentView(this,R.layout.activity_registration)
         val city = binding.editTextTextPersonName8.text!!.trim()
         val pincode = binding.editTextTextPersonName9.text!!.trim()
         val role = binding.editTextTextPersonName10.text!!.trim()
-
 
 
         if (TextUtils.isEmpty(firstname)) {
@@ -95,23 +93,23 @@ binding = DataBindingUtil.setContentView(this,R.layout.activity_registration)
             binding.editTextTextPersonName3.requestFocus()
             return
         }
-        if (TextUtils.getTrimmedLength(phone) > 10 || TextUtils.getTrimmedLength(phone) < 10) {
-            binding.editTextTextPersonName3.error = "enter 10 digit phone number"
-            binding.editTextTextPersonName3.requestFocus()
-            return
-        }
         if (TextUtils.isEmpty(password)) {
             binding.editTextTextPersonName5.error = "Password can't be empty"
             binding.editTextTextPersonName5.requestFocus()
             return
         }
 
+
         if (TextUtils.isEmpty(role)) {
-            binding.editTextTextPersonName10.error = "Please choose your role"
+            binding.editTextTextPersonName10.error = "Please choose role"
             binding.editTextTextPersonName10.requestFocus()
             return
         }
-
+        if (TextUtils.getTrimmedLength(phone) > 10 || TextUtils.getTrimmedLength(phone) < 10) {
+            binding.editTextTextPersonName3.error = "enter 10 digit phone number"
+            binding.editTextTextPersonName3.requestFocus()
+            return
+        }
 
         if (TextUtils.isEmpty(address)) {
             binding.editTextTextPersonName6.error = "Please enter your address"
@@ -138,7 +136,7 @@ binding = DataBindingUtil.setContentView(this,R.layout.activity_registration)
         }
 
         val stringRequest = object : StringRequest(
-            Request.Method.POST, URLs.URL_REGISTER,
+            Request.Method.POST, URLs.URL_ADD_USER,
             Response.Listener { response ->
 
                 try {
@@ -146,38 +144,34 @@ binding = DataBindingUtil.setContentView(this,R.layout.activity_registration)
                     val obj = JSONObject(response)
                     //if no error in response
                     if (!obj.getBoolean("error")) {
-                        Toast.makeText(applicationContext, obj.getString("message"), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireActivity().applicationContext, obj.getString("message"), Toast.LENGTH_SHORT).show()
+//
+//                        //getting the user from the response
+//                        val userJson = obj.getJSONObject("user")
+//
+//                        //creating a new user object
+//                        val user = NewUser(
+//                            userJson.getInt("id"),
+//                            userJson.getString("firstname"),
+//                            userJson.getString("lastname"),
+//                            userJson.getString("email"),
+//                            userJson.getString("phone"),
+//                            userJson.getString("address"),
+//                            userJson.getString("state"),
+//                            userJson.getString("city"),
+//                            userJson.getString("pincode"),
+//                            userJson.getString("role")
+//                        )
+                        findNavController().navigate(R.id.dashBoard)
 
-                        //getting the user from the response
-                        val userJson = obj.getJSONObject("user")
-
-                        //creating a new user object
-                        val user = User(
-                            userJson.getInt("id"),
-                            userJson.getString("firstname"),
-                            userJson.getString("lastname"),
-                            userJson.getString("email"),
-                            userJson.getString("phone"),
-                            userJson.getString("address"),
-                            userJson.getString("state"),
-                            userJson.getString("city"),
-                            userJson.getString("pincode"),
-                            userJson.getString("role")
-                        )
-
-
-
-                        //starting the MainActivity activity
-                        finish()
-                        startActivity(Intent(applicationContext, Login::class.java))
                     } else {
-                        Toast.makeText(applicationContext, obj.getString("message"), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireActivity().applicationContext, obj.getString("message"), Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
             },
-            Response.ErrorListener { error -> Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show() }) {
+            Response.ErrorListener { error -> Toast.makeText(requireActivity().applicationContext, error.message, Toast.LENGTH_SHORT).show() }) {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
@@ -196,7 +190,8 @@ binding = DataBindingUtil.setContentView(this,R.layout.activity_registration)
             }
         }
 
-        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest)
+        VolleySingleton.getInstance(requireActivity().applicationContext).addToRequestQueue(stringRequest)
+
 
 
 
@@ -204,17 +199,3 @@ binding = DataBindingUtil.setContentView(this,R.layout.activity_registration)
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

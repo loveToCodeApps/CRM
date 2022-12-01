@@ -1,16 +1,16 @@
 package com.example.crm
 
-data class User(
+data class Activity(
     var id: Int,
-    var firstName: String,
-    var lastName: String,
+    var name: String,
     var email:String,
+    var company:String,
     var phone: String,
     var address:String,
     var state:String,
     var city:String,
     var pincode:String,
-    var role:String
-
+    var reminderDate:String,
+    var assignTo:String
 
 )

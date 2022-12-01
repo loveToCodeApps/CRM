@@ -1,7 +1,6 @@
 package com.example.crm
 
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -10,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.DatePicker
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
@@ -19,124 +17,100 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.crm.databinding.FragmentActivitiesBinding
+import com.example.crm.databinding.FragmentEditMyActivitiesBinding
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
-// T
-class ActivitiesFragment : Fragment() {
-lateinit var binding:FragmentActivitiesBinding
-lateinit var reminderDate:String
+class EditMyActivitiesFragment : Fragment() {
+lateinit var binding:FragmentEditMyActivitiesBinding
+    lateinit var reminderDate:String
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-binding = DataBindingUtil.inflate(inflater,R.layout.fragment_activities,container,false)
-getUsers()
+         binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_edit_my_activities,
+            container,
+            false
+        )
+
+
+        // status drop down
+        val status = resources.getStringArray(R.array.status)
+        val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_layout,status)
+
+
+
+        // list of all users in drop down menu
+        getUsers()
+
+
+
 
         val calender = Calendar.getInstance()
-val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
-    calender.set(Calendar.YEAR,year)
-    calender.set(Calendar.MONTH,month)
-    calender.set(Calendar.DAY_OF_MONTH,dayOfMonth)
-    updateLabel(calender)
-}
-
-
-//if (getView()?.findFocus()?.id?.equals(R.id.reminder))
-//{
-//    DatePickerDialog(requireActivity(),datePicker,calender.get(Calendar.YEAR),calender.get(Calendar.MONTH),calender.get(Calendar.DAY_OF_MONTH))
-//        .show()
-//}
-
-
-
-
-        binding.reminder.setOnClickListener {
-            DatePickerDialog(requireActivity(),datePicker,calender.get(Calendar.YEAR),calender.get(Calendar.MONTH),calender.get(Calendar.DAY_OF_MONTH))
-                .show()
+        val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
+            calender.set(Calendar.YEAR, year)
+            calender.set(Calendar.MONTH, month)
+            calender.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            updateLabel(calender)
         }
+
+
+            binding.reminder.setOnClickListener {
+                DatePickerDialog(
+                    requireActivity(),
+                    datePicker,
+                    calender.get(Calendar.YEAR),
+                    calender.get(Calendar.MONTH),
+                    calender.get(Calendar.DAY_OF_MONTH)
+                )
+                    .show()
+            }
+
+
+            val args = EditMyActivitiesFragmentArgs.fromBundle(requireArguments())
+            binding.name.setText(args.oldData.act_name)
+            binding.email.setText(args.oldData.act_email)
+            binding.company.setText(args.oldData.act_assign_to)
+            binding.editTextTextPersonName10.setText(args.oldData.act_company)
+            binding.phone.setText(args.oldData.act_phone)
+            binding.address.setText(args.oldData.act_address)
+            binding.state.setText(args.oldData.act_state)
+            binding.city.setText(args.oldData.act_city)
+            binding.pincode.setText(args.oldData.act_pincode)
+            binding.reminder.setText(args.oldData.act_date)
+            binding.activitiesid.setText(args.oldData.act_id)
 
 
         binding.button.setOnClickListener {
-            addActivity()
-            findNavController().navigate(R.id.dashBoard)
-
+            editActivity()
         }
+
+
+
+        // Here don't use binding.autocompletetv.adapter = adapter
+        //it will give u error , instead use setAdapter()
+        binding.editTextTextPersonName11.setOnClickListener {
+            binding.editTextTextPersonName11.setAdapter(arrayAdapter)
+        }
+
+
+     binding.editTextTextPersonName11.setText("in progress")
+
 
 
         return binding.root
 
-    }
+        }
 
-    private fun getUsers() {
-        val act_list = ArrayList<String>()
-
-
-        val stringRequest = StringRequest(
-            Request.Method.GET,
-            URLs.URL_GET_USERS,
-            { s ->
-                try {
-                    val obj = JSONObject(s)
-                    if (!obj.getBoolean("error")) {
-                        val array = obj.getJSONArray("users")
-
-                        if (SharedPrefManager.getInstance(requireActivity().applicationContext).user.role=="Admin") {
-                            for (i in 0 until array.length()) {
-                                val objectArtist = array.getJSONObject(i)
-                                val banners = AssignToData(
-                                    objectArtist.optString("fname"),
-                                    objectArtist.optString("lname")
-
-                                )
-
-                                act_list.add(banners.firstName + " " + banners.lastName)
-                                val arrayAdapter = ArrayAdapter(
-                                    requireContext(),
-                                    R.layout.assign_to_dropdown_layout,
-                                    act_list
-                                )
-                                binding.editTextTextPersonName10.setAdapter(arrayAdapter)
-                            }
-                        }
-                        else if ((SharedPrefManager.getInstance(requireActivity().applicationContext).user.role=="Executive"))
-                        {
-                            binding.editTextTextPersonName10.setText(SharedPrefManager.getInstance(requireActivity().applicationContext).user.firstName+" "+SharedPrefManager.getInstance(requireActivity().applicationContext).user.lastName)
-                        }
-//                            val adapter = AssignToAdapter(act_list)
-//                            binding.editTextTextPersonName10.adapter = adapter
-                        }
-                     else {
-                        Toast.makeText(
-                            requireContext(),
-                            obj.getString("message"),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            },
-            { volleyError ->
-                Toast.makeText(
-                    requireContext(),
-                    volleyError.message,
-                    Toast.LENGTH_LONG
-                ).show()
-            })
-
-        val requestQueue = Volley.newRequestQueue(requireContext())
-        requestQueue.add(stringRequest)
-    }
-
-    private fun addActivity() {
-
+    private fun editActivity() {
+        val actid = binding.activitiesid.text!!.trim()
         val name = binding.name.text!!.trim()
         val email = binding.email.text!!.trim()
         val company = binding.company.text!!.trim()
@@ -161,7 +135,7 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
 
         if (TextUtils.isEmpty(company)) {
             binding.company.error = "Please enter company name"
-          binding.company.requestFocus()
+            binding.company.requestFocus()
             return
         }
 
@@ -220,7 +194,7 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
         }
 
         val stringRequest = object : StringRequest(
-            Request.Method.POST, URLs.URL_ACTIVITIES,
+            Request.Method.POST, URLs.URL_EDIT_ACTIVITIES,
             Response.Listener { response ->
 
                 try {
@@ -250,9 +224,10 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
                             userJson.getString("pincode") ,
                             userJson.getString("reminderDate"),
                             userJson.getString("assignTo")
+
+
                         )
 
-                        findNavController().navigate(R.id.dashBoard)
 
 
                     } else {
@@ -276,6 +251,7 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
+                params["act_id"] = actid.toString()
                 params["name"] = name.toString()
                 params["email"] = email.toString()
                 params["company"] = company.toString()
@@ -301,23 +277,65 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
     }
 
     private fun updateLabel(calener: Calendar) {
-        val myFormat = "yyyy-MM-dd"
-        val sdf = SimpleDateFormat(myFormat, Locale.UK)
+            val myFormat = "dd-MM-yyyy"
+            val sdf = SimpleDateFormat(myFormat, Locale.UK)
 // Here we can use calendar selected date
-        binding.reminder.setText((sdf.format(calener.time)))
-        reminderDate=(sdf.format(calener.time))
+            binding.reminder.setText((sdf.format(calener.time)))
+            reminderDate = (sdf.format(calener.time))
 
-        Log.i("oooooooooooooooooo",reminderDate)
+            Log.i("oooooooooooooooooo", reminderDate)
+        }
 
 
+    private fun getUsers() {
+        val act_list = ArrayList<String>()
+
+
+        val stringRequest = StringRequest(
+            Request.Method.GET,
+            URLs.URL_GET_USERS,
+            { s ->
+                try {
+                    val obj = JSONObject(s)
+                    if (!obj.getBoolean("error")) {
+                        val array = obj.getJSONArray("users")
+
+                        for (i in 0 until array.length()) {
+                            val objectArtist = array.getJSONObject(i)
+                            val banners = AssignToData(
+                                objectArtist.optString("fname"),
+                                objectArtist.optString("lname")
+
+                            )
+
+                            act_list.add(banners.firstName + " " + banners.lastName)
+                            val arrayAdapter = ArrayAdapter(requireContext(),R.layout.assign_to_dropdown_layout,act_list)
+                            binding.editTextTextPersonName10.setAdapter(arrayAdapter)
+//                            val adapter = AssignToAdapter(act_list)
+//                            binding.editTextTextPersonName10.adapter = adapter
+                        }
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            obj.getString("message"),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            },
+            { volleyError ->
+                Toast.makeText(
+                    requireContext(),
+                    volleyError.message,
+                    Toast.LENGTH_LONG
+                ).show()
+            })
+
+        val requestQueue = Volley.newRequestQueue(requireContext())
+        requestQueue.add(stringRequest)
     }
 
 
-
 }
-
-
-
-
-
-

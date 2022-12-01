@@ -26,7 +26,9 @@ class SharedPrefManager private constructor(context: Context) {
                 sharedPreferences.getString(KEY_ADDRESS, null)!!,
                 sharedPreferences.getString(KEY_STATE, null)!!,
                 sharedPreferences.getString(KEY_CITY, null)!!,
-                sharedPreferences.getString(KEY_PIN_CODE, null)!!
+                sharedPreferences.getString(KEY_PIN_CODE, null)!!,
+                sharedPreferences.getString(KEY_ROLE, null)!!
+
             )
         }
 
@@ -47,6 +49,8 @@ class SharedPrefManager private constructor(context: Context) {
         editor?.putString(KEY_STATE, user.state)
         editor?.putString(KEY_CITY, user.city)
         editor?.putString(KEY_PIN_CODE, user.pincode)
+        editor?.putString(KEY_ROLE, user.role)
+
         editor?.apply()
     }
 
@@ -70,6 +74,7 @@ class SharedPrefManager private constructor(context: Context) {
         private val KEY_STATE = "keystate"
         private val KEY_CITY = "keycity"
         private val KEY_PIN_CODE= "keypincode"
+        private val KEY_ROLE= "keyrole"
         private val KEY_ID = "keyid"
         private var mInstance: SharedPrefManager? = null
         private var ctx: Context? = null
@@ -82,3 +87,7 @@ class SharedPrefManager private constructor(context: Context) {
         }
     }
 }
+
+
+
+
