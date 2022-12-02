@@ -76,6 +76,8 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
 
                         }
 
+
+
                         for (i in (array.length()-1) downTo 0 ){
                             val objectArtist = array.getJSONObject(i)
                             val banners = NotificationReminderData(
@@ -117,6 +119,10 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
+                    binding.textView13.visibility=View.VISIBLE
+                    binding.lottieAnimationView.visibility=View.VISIBLE
+                    binding.progressBar1.visibility=View.GONE
+
                 }
             },
             Response.ErrorListener { error ->
@@ -158,17 +164,16 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
                         val array = obj.getJSONArray("activity")
 //                        binding.textView40.text = array.length().toString()
 
-                        if(array.length()<=0)
-                        {
-                            binding.textView13.visibility=View.VISIBLE
-                            binding.lottieAnimationView.visibility=View.VISIBLE
-                        }
-                        else
+                        if (array.length()>0)
                         {
                             binding.textView13.visibility=View.INVISIBLE
                             binding.lottieAnimationView.visibility=View.INVISIBLE
+                            binding.progressBar1.visibility=View.INVISIBLE
 
                         }
+
+
+
 
                         for (i in (array.length()-1) downTo 0 ){
                             val objectArtist = array.getJSONObject(i)
@@ -211,6 +216,9 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
+                    binding.textView13.visibility=View.VISIBLE
+                    binding.lottieAnimationView.visibility=View.VISIBLE
+                    binding.progressBar1.visibility=View.GONE
                 }
             },
             Response.ErrorListener { error ->

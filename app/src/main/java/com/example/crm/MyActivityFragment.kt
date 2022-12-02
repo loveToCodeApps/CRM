@@ -1,5 +1,6 @@
 package com.example.crm
 
+import android.opengl.Visibility
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,9 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import com.android.volley.AuthFailureError
-import com.android.volley.Request
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.StringRequest
 import com.example.crm.databinding.FragmentMyActivityBinding
 import org.json.JSONException
@@ -103,6 +102,10 @@ class MyActivityFragment : Fragment() {
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
+                    binding.textView13.visibility=View.VISIBLE
+                    binding.lottieAnimationView.visibility=View.VISIBLE
+                    binding.progressBar1.visibility=View.GONE
+
                 }
             },
             Response.ErrorListener { error -> Toast.makeText(requireActivity().applicationContext, error.message, Toast.LENGTH_SHORT).show() }) {
@@ -138,17 +141,18 @@ class MyActivityFragment : Fragment() {
                     if (!obj.getBoolean("error")) {
                         val array = obj.getJSONArray("activity")
 
-                        if(array.length()<=0)
-                        {
-                            binding.textView13.visibility=View.VISIBLE
-                            binding.lottieAnimationView.visibility=View.VISIBLE
-                        }
-                        else
+
+
+                         if (array.length()>0)
                         {
                             binding.textView13.visibility=View.INVISIBLE
                             binding.lottieAnimationView.visibility=View.INVISIBLE
+                            binding.progressBar1.visibility=View.INVISIBLE
 
                         }
+
+
+
 
 
                         for (i in (array.length()-1) downTo 0) {
@@ -173,13 +177,21 @@ class MyActivityFragment : Fragment() {
                         }
                     } else {
                         Toast.makeText(requireActivity().applicationContext, obj.getString("message"), Toast.LENGTH_SHORT).show()
+
+
                     }
 
                 } catch (e: JSONException) {
                     e.printStackTrace()
+                    binding.textView13.visibility=View.VISIBLE
+                    binding.lottieAnimationView.visibility=View.VISIBLE
+                    binding.progressBar1.visibility=View.GONE
+
                 }
+
             },
-            Response.ErrorListener { error -> Toast.makeText(requireActivity().applicationContext, error.message, Toast.LENGTH_SHORT).show() }) {
+            Response.ErrorListener { error -> Toast.makeText(requireActivity().applicationContext, error.message, Toast.LENGTH_SHORT).show() }
+        ) {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()

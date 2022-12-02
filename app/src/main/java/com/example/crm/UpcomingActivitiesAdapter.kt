@@ -13,7 +13,7 @@ class UpcomingActivitiesAdapter(var data : List<NotificationReminderData>) : Rec
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UpcomingActivitiesViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.my_activities_item_view,parent,false)
+        val view = inflater.inflate(R.layout.upcoming_activites_item_view,parent,false)
         return UpcomingActivitiesViewHolder(view)
 
     }
@@ -44,7 +44,6 @@ class UpcomingActivitiesViewHolder(itemView: View): RecyclerView.ViewHolder(item
     val phone: TextView =itemView.findViewById(R.id.textView16)
     val address: TextView =itemView.findViewById(R.id.textView17)
     val date: TextView =itemView.findViewById(R.id.textView18)
-    val edit: ImageView = itemView.findViewById(R.id.imageView6)
 //val idOfActivity:TextView = itemView.findViewById(R.id.activityId)
 
 }

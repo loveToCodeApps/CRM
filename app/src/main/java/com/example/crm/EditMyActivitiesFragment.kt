@@ -90,6 +90,8 @@ lateinit var binding:FragmentEditMyActivitiesBinding
 
         binding.button.setOnClickListener {
             editActivity()
+            findNavController().navigate(R.id.dashBoard)
+
         }
 
 
@@ -122,6 +124,7 @@ lateinit var binding:FragmentEditMyActivitiesBinding
         val reminderDate = binding.reminder.text!!.trim()
         val assignTo = binding.editTextTextPersonName10.text.trim()
         val id = SharedPrefManager.getInstance(requireContext().applicationContext).user.id
+        val status = binding.editTextTextPersonName11.text.trim()
 
 
 
@@ -263,6 +266,8 @@ lateinit var binding:FragmentEditMyActivitiesBinding
                 params["reminderDate"] = reminderDate.toString()
                 params["assignTo"] = assignTo.toString()
                 params["id"] = id.toString()
+                params["status"] = status.toString()
+
 
 
 

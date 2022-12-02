@@ -82,10 +82,13 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+
         // Hide Add User Tab if role of user is Executive.
         val nav_Menu: Menu = binding.myNavView.menu
-        if (SharedPrefManager.getInstance(this).user.role == "Executive") {
-            nav_Menu.findItem(R.id.add_user).isVisible = false
+        if(SharedPrefManager.getInstance(this).isLoggedIn) {
+            if (SharedPrefManager.getInstance(this).user.role == "Executive") {
+                nav_Menu.findItem(R.id.add_user).isVisible = false
+            }
         }
 
         // user name in the navigation drawer
