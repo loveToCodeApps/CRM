@@ -4,33 +4,32 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class MyActivitiesData(
-   var act_id:String,
-   var act_name:String,
-   var act_phone:String,
-   var act_address:String,
-   var act_state:String,
-   var act_city:String,
-   var act_pincode:String,
-   var act_date:String,
-   var act_email:String,
-   var act_assign_to:String,
-   var act_company:String
-
-) : Parcelable {
+   var act_id: String?,
+   var act_name: String?,
+   var act_phone: String?,
+   var act_address: String?,
+   var act_state: String?,
+   var act_city: String?,
+   var act_pincode: String?,
+   var act_date: String?,
+   var act_email: String?,
+   var act_assign_to: String?,
+   var act_company: String?,
+   var act_status: String?
+   ) : Parcelable {
    constructor(parcel: Parcel) : this(
-      parcel.readString()!!,
-      parcel.readString()!!,
-      parcel.readString()!!,
-      parcel.readString()!!,
-      parcel.readString()!!,
-      parcel.readString()!!,
-      parcel.readString()!!,
-      parcel.readString()!!,
-      parcel.readString()!!,
-      parcel.readString()!!,
-      parcel.readString()!!
-
-
+      parcel.readString(),
+      parcel.readString(),
+      parcel.readString(),
+      parcel.readString(),
+      parcel.readString(),
+      parcel.readString(),
+      parcel.readString(),
+      parcel.readString(),
+      parcel.readString(),
+      parcel.readString(),
+      parcel.readString(),
+      parcel.readString()
    ) {
    }
 
@@ -46,7 +45,7 @@ data class MyActivitiesData(
       parcel.writeString(act_email)
       parcel.writeString(act_assign_to)
       parcel.writeString(act_company)
-
+      parcel.writeString(act_status)
    }
 
    override fun describeContents(): Int {
@@ -63,25 +62,3 @@ data class MyActivitiesData(
       }
    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

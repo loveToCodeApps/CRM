@@ -1,7 +1,9 @@
-package com.example.crm
+﻿package com.example.crm
 
 import android.app.DatePickerDialog
+import android.content.ContentResolver
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -22,6 +24,7 @@ import com.android.volley.toolbox.Volley
 import com.example.crm.databinding.FragmentActivitiesBinding
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -30,7 +33,11 @@ import kotlin.collections.ArrayList
 class ActivitiesFragment : Fragment() {
 lateinit var binding:FragmentActivitiesBinding
 lateinit var reminderDate:String
+ private var imageData: ByteArray? = null
 
+    companion object {
+        private const val IMAGE_PICK_CODE = 999
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,6 +46,10 @@ lateinit var reminderDate:String
 binding = DataBindingUtil.inflate(inflater,R.layout.fragment_activities,container,false)
 getUsers()
 
+        binding.imageButton.setOnClickListener {
+            launchGallery()
+
+        }
         val calender = Calendar.getInstance()
 val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
     calender.set(Calendar.YEAR,year)
@@ -73,6 +84,51 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
         return binding.root
 
     }
+
+
+    // open image apps to select apps
+    private fun launchGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_PICK_CODE)
+    }
+
+
+
+    // upload selected images
+    private fun uploadImage() {
+        imageData ?: return
+        val request = object : VolleyFileUploadRequest(
+            Method.POST,
+            URLs.URL_UPLOAD_IMAGE,
+            Response.Listener {
+
+
+
+                println("response is: $it")
+            },
+            Response.ErrorListener {
+                println("error is: $it")
+
+            }
+        ) {
+            override fun getByteData(): MutableMap<String, FileDataPart> {
+                var params = HashMap<String, FileDataPart>()
+                params["imageFile"] = FileDataPart("image", imageData!!, "jpeg")
+                return params
+            }
+        }
+        Volley.newRequestQueue(requireActivity().applicationContext).add(request)
+    }
+
+    @Throws(IOException::class)
+    private fun createImageData(uri: Uri) {
+        val inputStream =requireContext().contentResolver.openInputStream(uri)
+        inputStream?.buffered()?.use {
+            imageData = it.readBytes()
+        }
+    }
+
 
     private fun getUsers() {
         val act_list = ArrayList<String>()
@@ -136,6 +192,10 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
     }
 
     private fun addActivity() {
+
+     //   val img_name = uploadImage()
+//        val vid_name = getUploadedVideo()
+
 
         val name = binding.name.text!!.trim()
         val email = binding.email.text!!.trim()
@@ -219,6 +279,8 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
             return
         }
 
+//        uploadImage
+
         val stringRequest = object : StringRequest(
             Request.Method.POST, URLs.URL_ACTIVITIES,
             Response.Listener { response ->
@@ -287,6 +349,9 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
                 params["reminderDate"] = reminderDate.toString()
                 params["assignTo"] = assignTo.toString()
                 params["id"] = id.toString()
+             //   params["images"] = img_name.toString()
+//                params["videos"] = vid_name.toString()
+
 
 
 

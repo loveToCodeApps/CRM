@@ -266,9 +266,8 @@ class DashBoardFragment : Fragment() {
                     //if no error in response
                     if (!obj.getBoolean("error")) {
                         val array = obj.getJSONArray("activity")
+
                         binding.textView40.text = array.length().toString()
-
-
 
                         for (i in 0 until array.length()) {
                             val objectArtist = array.getJSONObject(i)

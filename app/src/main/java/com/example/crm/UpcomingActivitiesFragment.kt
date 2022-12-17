@@ -73,6 +73,8 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
                         {
                             binding.textView13.visibility=View.INVISIBLE
                             binding.lottieAnimationView.visibility=View.INVISIBLE
+                            binding.progressBar1.visibility=View.INVISIBLE
+
 
                         }
 

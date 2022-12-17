@@ -12,8 +12,33 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="21">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+
     </style>
     <style name="progressbarback">
         <item name="colorAccent">#E85536</item> <!-- Whatever color you want-->
     </style>
+
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+    <style name="CustomDialogTheme" parent="@android:style/Theme.Dialog">
+        <item name="android:bottomBright">#fff</item>
+        <item name="android:bottomDark">#fff</item>
+        <item name="android:bottomMedium">#fff</item>
+        <item name="android:centerBright">#fff</item>
+        <item name="android:centerDark">#fff</item>
+        <item name="android:centerMedium">#fff</item>
+        <item name="android:fullBright">#7D266A</item>
+        <item name="android:fullDark">#7D266A</item>
+        <item name="android:topBright">#2f6699</item>
+        <item name="android:topDark">#2f6699</item>
+</style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/history_dialog</item>
+    </style>
+
 </resources>

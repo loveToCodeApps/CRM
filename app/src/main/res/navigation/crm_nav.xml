@@ -44,10 +44,33 @@
         <argument
             android:name="oldData"
             app:argType="com.example.crm.MyActivitiesData" />
+        <action
+            android:id="@+id/action_editMyActivitiesFragment_to_historyFragment"
+            app:destination="@id/historyFragment" />
     </fragment>
     <fragment
         android:id="@+id/upcomingActivitiesFragment"
         android:name="com.example.crm.UpcomingActivitiesFragment"
         android:label="Upcoming Activities"
         tools:layout="@layout/fragment_upcoming_activities" />
+    <fragment
+        android:id="@+id/demoFragment"
+        android:name="com.example.crm.demoFragment"
+        android:label="fragment_demo"
+        tools:layout="@layout/fragment_demo" />
+    <dialog
+        android:id="@+id/historyFragment"
+        android:name="com.example.crm.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history" >
+        <argument
+            android:name="activityId"
+            app:argType="string" />
+    </dialog>
+    <fragment
+        android:id="@+id/dateFilterFragment"
+        android:name="com.example.crm.DateFilterFragment"
+        android:label="fragment_date_filter"
+        tools:layout="@layout/fragment_date_filter" />
+
 </navigation>

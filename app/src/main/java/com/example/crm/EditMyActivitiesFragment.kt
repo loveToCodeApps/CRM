@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.android.volley.AuthFailureError
 import com.android.volley.Request
@@ -18,6 +19,8 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.crm.databinding.FragmentEditMyActivitiesBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -41,6 +44,14 @@ lateinit var binding:FragmentEditMyActivitiesBinding
         )
 
 
+
+
+binding.floatingActionButton4.setOnClickListener {
+   val args = EditMyActivitiesFragmentArgs.fromBundle(requireArguments())
+    it.findNavController().navigate(EditMyActivitiesFragmentDirections.actionEditMyActivitiesFragmentToHistoryFragment(args.oldData.act_id))
+}
+
+
         // status drop down
         val status = resources.getStringArray(R.array.status)
         val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_layout,status)
@@ -49,6 +60,8 @@ lateinit var binding:FragmentEditMyActivitiesBinding
 
         // list of all users in drop down menu
         getUsers()
+
+
 
 
 
@@ -86,6 +99,9 @@ lateinit var binding:FragmentEditMyActivitiesBinding
             binding.pincode.setText(args.oldData.act_pincode)
             binding.reminder.setText(args.oldData.act_date)
             binding.activitiesid.setText(args.oldData.act_id)
+          binding.editTextTextPersonName11.setText(args.oldData.act_status)
+      //   88888888888888888888888888888888888888888888888888
+
 
 
         binding.button.setOnClickListener {
@@ -112,6 +128,8 @@ lateinit var binding:FragmentEditMyActivitiesBinding
         }
 
     private fun editActivity() {
+
+
         val actid = binding.activitiesid.text!!.trim()
         val name = binding.name.text!!.trim()
         val email = binding.email.text!!.trim()
@@ -124,7 +142,7 @@ lateinit var binding:FragmentEditMyActivitiesBinding
         val reminderDate = binding.reminder.text!!.trim()
         val assignTo = binding.editTextTextPersonName10.text.trim()
         val id = SharedPrefManager.getInstance(requireContext().applicationContext).user.id
-        val status = binding.editTextTextPersonName11.text.trim()
+        val status = binding.editTextTextPersonName11.text.trim()!!
 
 
 
@@ -271,6 +289,7 @@ lateinit var binding:FragmentEditMyActivitiesBinding
 
 
 
+
                 return params
             }
         }
@@ -280,6 +299,74 @@ lateinit var binding:FragmentEditMyActivitiesBinding
 
 
     }
+
+    private fun getUploadedVideo() {
+        val stringRequest = StringRequest(
+            Request.Method.GET,
+            URLs.URL_UPLOAD_VIDEO,
+            { s ->
+                try {
+                    val obj = JSONObject(s)
+                    if (!obj.getBoolean("error")) {
+                        val userJson = obj.getJSONObject("response")
+                        val namee = userJson.getString("video_name")
+                    }  else {
+                        Toast.makeText(
+                            requireContext(),
+                            obj.getString("message"),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            },
+            { volleyError ->
+                Toast.makeText(
+                    requireContext(),
+                    volleyError.message,
+                    Toast.LENGTH_LONG
+                ).show()
+            })
+
+        val requestQueue = Volley.newRequestQueue(requireContext())
+        requestQueue.add(stringRequest)
+    }
+
+    private fun getUploadedImage() {
+        val stringRequest = StringRequest(
+            Request.Method.GET,
+            URLs.URL_UPLOAD_IMAGE,
+            { s ->
+                try {
+                    val obj = JSONObject(s)
+                    if (!obj.getBoolean("error")) {
+                        val userJson = obj.getJSONObject("response")
+                      val namee = userJson.getString("image_name")
+                    }  else {
+                        Toast.makeText(
+                            requireContext(),
+                            obj.getString("message"),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            },
+            { volleyError ->
+                Toast.makeText(
+                    requireContext(),
+                    volleyError.message,
+                    Toast.LENGTH_LONG
+                ).show()
+            })
+
+        val requestQueue = Volley.newRequestQueue(requireContext())
+        requestQueue.add(stringRequest)
+    }
+
+
 
     private fun updateLabel(calener: Calendar) {
             val myFormat = "dd-MM-yyyy"
@@ -344,3 +431,7 @@ lateinit var binding:FragmentEditMyActivitiesBinding
 
 
 }
+
+
+
+

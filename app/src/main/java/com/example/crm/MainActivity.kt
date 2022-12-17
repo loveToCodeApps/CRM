@@ -94,10 +94,14 @@ class MainActivity : AppCompatActivity() {
         // user name in the navigation drawer
         val headerView = binding.myNavView.getHeaderView(0)
         val username = headerView.findViewById<TextView>(R.id.username)
-      val usernames = SharedPrefManager.getInstance(this).user.firstName + " " + SharedPrefManager.getInstance(this).user.lastName
+     if (SharedPrefManager.getInstance(this).isLoggedIn) {
+         val usernames =
+             SharedPrefManager.getInstance(this).user.firstName + " " + SharedPrefManager.getInstance(
+                 this
+             ).user.lastName
 
-        username.text = usernames
-
+         username.text = usernames
+     }
 
     }
 

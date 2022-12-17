@@ -10,5 +10,7 @@ if ($conn->connect_error) {
 }  
 
  define("IMGPATH", "https://affetta.com/cms/");
+ define("IMAGE_UPLOAD_PATH", "images/");
+  define("VIDEO_UPLOAD_PATH", "videos/");
  ?> 
 
