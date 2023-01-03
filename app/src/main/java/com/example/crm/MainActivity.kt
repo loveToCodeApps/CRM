@@ -26,7 +26,13 @@ class MainActivity : AppCompatActivity() {
     {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
-
+        if (SharedPrefManager.getInstance(this).isLoggedIn) {
+            val user = SharedPrefManager.getInstance(this).user
+        } else {
+            val intent = Intent(this@MainActivity, Login::class.java)
+            startActivity(intent)
+            finish()
+        }
 
 
 
@@ -42,13 +48,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        if (SharedPrefManager.getInstance(this).isLoggedIn) {
-            val user = SharedPrefManager.getInstance(this).user
-        } else {
-            val intent = Intent(this@MainActivity, Login::class.java)
-            startActivity(intent)
-            finish()
-        }
+
 
 
 

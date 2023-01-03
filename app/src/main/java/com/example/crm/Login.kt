@@ -11,6 +11,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.example.crm.databinding.ActivityLoginBinding
+import com.google.android.material.snackbar.Snackbar
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -35,6 +36,10 @@ class Login : AppCompatActivity() {
             startActivity(Intent(this, Registration::class.java))
         }
 
+        binding.regis2.setOnClickListener {
+            finish()
+            startActivity(Intent(this, ForgotPassword::class.java))
+        }
 
 
 
@@ -83,6 +88,15 @@ class Login : AppCompatActivity() {
                                 obj.getString("message"),
                                 Toast.LENGTH_SHORT
                             ).show()
+
+//                            Snackbar.make(
+//                                this.findViewById(android.R.id.content),
+//                                obj.getString("message"),
+//                                Snackbar.LENGTH_SHORT // How long to display the message.
+//                            ).show()
+//
+
+
 
 
 

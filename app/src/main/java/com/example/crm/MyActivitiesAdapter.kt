@@ -24,9 +24,16 @@ val item = data[position]
         holder.phone.text= item.act_phone
         holder.address.text= item.act_address +" , "+ item.act_state +" , "+ item.act_city +" , "+ item.act_pincode
         holder.date.text= item.act_date
+        holder.status.text = item.act_status.toString()
 //        holder.idOfActivity.text = item.act_id
+
+        if(holder.status.text=="cancelled" && SharedPrefManager.getInstance(holder.edit.context).user.role=="Executive" || holder.status.text=="completed" && SharedPrefManager.getInstance(holder.edit.context).user.role=="Executive")
+        {
+            holder.edit.visibility=View.GONE
+        }
+
         holder.edit.setOnClickListener {
-        it.findNavController().navigate(MyActivityFragmentDirections.actionMyActivityFragmentToEditMyActivitiesFragment(item))
+            it.findNavController().navigate(MyActivityFragmentDirections.actionMyActivityFragmentToEditMyActivitiesFragment(item))
         }
 
 
@@ -47,6 +54,7 @@ val phone:TextView=itemView.findViewById(R.id.textView16)
 val address:TextView=itemView.findViewById(R.id.textView17)
 val date:TextView=itemView.findViewById(R.id.textView18)
 val edit: ImageView = itemView.findViewById(R.id.imageView6)
+val status:TextView = itemView.findViewById(R.id.status)
 //val idOfActivity:TextView = itemView.findViewById(R.id.activityId)
 
 }

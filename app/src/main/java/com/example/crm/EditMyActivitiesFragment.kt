@@ -48,7 +48,7 @@ lateinit var binding:FragmentEditMyActivitiesBinding
 
 binding.floatingActionButton4.setOnClickListener {
    val args = EditMyActivitiesFragmentArgs.fromBundle(requireArguments())
-    it.findNavController().navigate(EditMyActivitiesFragmentDirections.actionEditMyActivitiesFragmentToHistoryFragment(args.oldData.act_id))
+    it.findNavController().navigate(EditMyActivitiesFragmentDirections.actionEditMyActivitiesFragmentToHistoryFragment(args.oldData.act_id.toString()))
 }
 
 
@@ -88,18 +88,20 @@ binding.floatingActionButton4.setOnClickListener {
 
 
             val args = EditMyActivitiesFragmentArgs.fromBundle(requireArguments())
-            binding.name.setText(args.oldData.act_name)
-            binding.email.setText(args.oldData.act_email)
-            binding.company.setText(args.oldData.act_assign_to)
-            binding.editTextTextPersonName10.setText(args.oldData.act_company)
-            binding.phone.setText(args.oldData.act_phone)
-            binding.address.setText(args.oldData.act_address)
-            binding.state.setText(args.oldData.act_state)
-            binding.city.setText(args.oldData.act_city)
-            binding.pincode.setText(args.oldData.act_pincode)
-            binding.reminder.setText(args.oldData.act_date)
-            binding.activitiesid.setText(args.oldData.act_id)
-          binding.editTextTextPersonName11.setText(args.oldData.act_status)
+              binding.name.setText(args.oldData.act_name)
+              binding.email.setText(args.oldData.act_email)
+              binding.company.setText(args.oldData.act_assign_to)
+              binding.editTextTextPersonName10.setText(args.oldData.act_company)
+              binding.phone.setText(args.oldData.act_phone)
+              binding.address.setText(args.oldData.act_address)
+              binding.state.setText(args.oldData.act_state)
+              binding.city.setText(args.oldData.act_city)
+              binding.pincode.setText(args.oldData.act_pincode)
+              binding.reminder.setText(args.oldData.act_date)
+              binding.activitiesid.setText(args.oldData.act_id)
+              binding.editTextTextPersonName11.setText(args.oldData.act_status)
+
+
       //   88888888888888888888888888888888888888888888888888
 
 
@@ -119,7 +121,7 @@ binding.floatingActionButton4.setOnClickListener {
         }
 
 
-     binding.editTextTextPersonName11.setText("in progress")
+   //  binding.editTextTextPersonName11.setText("in progress")
 
 
 

@@ -1,17 +1,18 @@
-package com.example.crm
+﻿package com.example.crm
 
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.android.volley.*
 import com.android.volley.toolbox.StringRequest
 import com.example.crm.databinding.FragmentMyActivityBinding
+import com.google.android.material.snackbar.Snackbar
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -44,7 +45,7 @@ class MyActivityFragment : Fragment() {
 //        act_list.add(MyActivitiesData("education course launching with our collegues ","7507794570","Green park hights","28-11-2022"))
 
 
-//        binding.activitiesRcv.adapter = MyActivitiesAdapter(act_list)
+//        binding.activitiesRcv.adapter = MyActivitiesAdapter(act_list
 
         if(SharedPrefManager.getInstance(requireActivity().applicationContext).user.role == "Executive")
         {
@@ -89,21 +90,14 @@ class MyActivityFragment : Fragment() {
         binding.button8.setOnClickListener {
             if(from_flag=="true" && to_flag=="true")
             {
+                setHasOptionsMenu(true)
                 if (SharedPrefManager.getInstance(requireActivity()).user.role=="Executive")
                 {
                     sortActivitiesForExecutive()
-                    from_flag="false"
-                    to_flag="false"
-                    binding.button6.text = "From :"
-                    binding.button7.text = "To :"
                 }
                 else if (SharedPrefManager.getInstance(requireActivity()).user.role=="Admin")
                 {
                     sortActivitiesForAdmin()
-                    from_flag="false"
-                    to_flag="false"
-                    binding.button6.text = "From :"
-                    binding.button7.text = "To :"
                 }
 
             }
@@ -112,12 +106,14 @@ class MyActivityFragment : Fragment() {
                 Toast.makeText(requireContext(),"please select both from & to date",Toast.LENGTH_SHORT).show()
             }
         }
+
+
         return binding.root
 
     }
 
     private fun sortActivitiesForAdmin() {
-        val act_lists = mutableListOf<NotificationReminderData>()
+        val acts_lists = mutableListOf<MyActivitiesData>()
         val from = binding.button6.text
         val to = binding.button7.text
         val calender: Calendar = Calendar.getInstance()
@@ -149,21 +145,24 @@ class MyActivityFragment : Fragment() {
 
                         for (i in (array.length()-1) downTo 0 ){
                             val objectArtist = array.getJSONObject(i)
-                            val banners = NotificationReminderData(
+                            val banners = MyActivitiesData(
                                 objectArtist.optString("id"),
                                 objectArtist.optString("name"),
-                                objectArtist.optString("date"),
-                                objectArtist.optString("userid"),
                                 objectArtist.optString("phone"),
                                 objectArtist.optString("address"),
                                 objectArtist.optString("state"),
                                 objectArtist.optString("city"),
-                                objectArtist.optString("pincode")
+                                objectArtist.optString("pincode"),
+                                objectArtist.optString("date"),
+                                objectArtist.optString("email"),
+                                objectArtist.optString("company"),
+                                objectArtist.optString("assignTo"),
+                                objectArtist.optString("status")
 
                             )
 
-                            act_lists.add(banners)
-                            val adapter = UpcomingActivitiesAdapter(act_lists)
+                            acts_lists.add(banners)
+                            val adapter = MyActivitiesAdapter(acts_lists)
                             binding.activitiesRcv.adapter=adapter
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
@@ -204,7 +203,7 @@ class MyActivityFragment : Fragment() {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
                 val params = java.util.HashMap<String, String>()
-                params["user_id"] =
+                params["id"] =
                     SharedPrefManager.getInstance(requireActivity().applicationContext).user.id.toString()
                 params["from"] = from.toString()
                 params["to"] = to.toString()
@@ -218,7 +217,7 @@ class MyActivityFragment : Fragment() {
     }
 
     private fun sortActivitiesForExecutive() {
-        val act_lists = mutableListOf<NotificationReminderData>()
+        var act = mutableListOf<MyActivitiesData>()
         val from = binding.button6.text
         val to = binding.button7.text
         val calender: Calendar = Calendar.getInstance()
@@ -247,21 +246,24 @@ class MyActivityFragment : Fragment() {
 
                         for (i in (array.length()-1) downTo 0 ){
                             val objectArtist = array.getJSONObject(i)
-                            val banners = NotificationReminderData(
+                            val banners = MyActivitiesData(
                                 objectArtist.optString("id"),
                                 objectArtist.optString("name"),
-                                objectArtist.optString("date"),
-                                objectArtist.optString("userid"),
                                 objectArtist.optString("phone"),
                                 objectArtist.optString("address"),
                                 objectArtist.optString("state"),
                                 objectArtist.optString("city"),
-                                objectArtist.optString("pincode")
+                                objectArtist.optString("pincode"),
+                                objectArtist.optString("date"),
+                                objectArtist.optString("email"),
+                                objectArtist.optString("company"),
+                                objectArtist.optString("assignTo"),
+                                objectArtist.optString("status")
 
                             )
 
-                            act_lists.add(banners)
-                            val adapter = UpcomingActivitiesAdapter(act_lists)
+                            act.add(banners)
+                            val adapter = MyActivitiesAdapter(act)
                             binding.activitiesRcv.adapter=adapter
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
@@ -320,7 +322,7 @@ class MyActivityFragment : Fragment() {
 
 
     private fun getAdminActivities() {
-        val act_list = mutableListOf<MyActivitiesData>()
+        val acts_list = mutableListOf<MyActivitiesData>()
         val stringRequest = object : StringRequest(
             Request.Method.POST, URLs.URL_GET_ADMIN_ACTIVITIES,
             Response.Listener { response ->
@@ -364,8 +366,8 @@ class MyActivityFragment : Fragment() {
                                 objectArtist.optString("status")
 
                             )
-                            act_list.add(banners)
-                            val adapter = MyActivitiesAdapter(act_list)
+                            acts_list.add(banners)
+                            val adapter = MyActivitiesAdapter(acts_list)
                             binding.activitiesRcv.adapter=adapter
                         }
                     } else {
@@ -400,7 +402,7 @@ class MyActivityFragment : Fragment() {
 
 
     private fun getExecutiveActivities() {
-        val act_list = mutableListOf<MyActivitiesData>()
+        val acts_list = mutableListOf<MyActivitiesData>()
         val stringRequest = object : StringRequest(
             Request.Method.POST, URLs.URL_GET_EXECUTIVE_ACTIVITIES,
             Response.Listener { response ->
@@ -447,8 +449,8 @@ class MyActivityFragment : Fragment() {
                                 objectArtist.optString("assignTo"),
                                 objectArtist.optString("status")
                             )
-                            act_list.add(banners)
-                            val adapter = MyActivitiesAdapter(act_list)
+                            acts_list.add(banners)
+                            val adapter = MyActivitiesAdapter(acts_list)
                             binding.activitiesRcv.adapter=adapter
                         }
                     } else {
@@ -509,6 +511,53 @@ class MyActivityFragment : Fragment() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.reset_date_data, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+      when(item.itemId)
+      {
+          R.id.resetData-> {
+              if (SharedPrefManager.getInstance(requireActivity()).user.role == "Executive") {
+                  from_flag="false"
+                    to_flag="false"
+                    binding.button6.text = "From :"
+                    binding.button7.text = "To :"
+                  getExecutiveActivities()
+                  Snackbar.make(requireActivity().findViewById(android.R.id.content),
+                      "Cleared date filter successfully!!", Snackbar.LENGTH_SHORT).show();
+
+//                  Toast.makeText(requireContext(), "Reset date  successfully", Toast.LENGTH_SHORT)
+//                      .show()
+                  setHasOptionsMenu(false)
+
+
+              } else if (SharedPrefManager.getInstance(requireActivity()).user.role == "Admin") {
+                  from_flag="false"
+                  to_flag="false"
+                  binding.button6.text = "From :"
+                  binding.button7.text = "To :"
+                  getAdminActivities()
+
+                  Snackbar.make(requireActivity().findViewById(android.R.id.content),
+                      "Cleared date filter successfully!!", Snackbar.LENGTH_SHORT).show();
+
+//                  Toast.makeText(requireContext(), "Reset date  successfully", Toast.LENGTH_SHORT)
+//                      .show()
+                  setHasOptionsMenu(false)
+
+              }
+          }
+
+
+
+
+
+      }
+
+          return true
+    }
 
 
 

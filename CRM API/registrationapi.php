@@ -6,6 +6,7 @@ if(isset($_GET['apicall'])){
   switch($_GET['apicall']){  
       case 'signup': 
       if(isTheseParametersAvailable(array('firstname','lastname','email','phone','password','address','state','city','pincode','role'))){  
+        date_default_timezone_set('Asia/Kolkata'); 
         $firstname = $_POST['firstname'];   
         $lastname = $_POST['lastname'];  
         $email = $_POST['email'];   
@@ -15,7 +16,8 @@ if(isset($_GET['apicall'])){
         $state = $_POST['state'];   
         $city = $_POST['city'];   
         $pincode = $_POST['pincode']; 
-        $role = $_POST['role'];     
+        $role = $_POST['role']; 
+        $created_on = date('Y-m-d H:i:s');
 
         $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");  
         $stmt->bind_param("s", $email);  
@@ -28,8 +30,8 @@ if(isset($_GET['apicall'])){
             $stmt->close();  
         }  
         else{  
-            $stmt = $conn->prepare("INSERT INTO users (fname, lname, email, phone,password,addr,state_name,city_name,pincode,role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");  
-            $stmt->bind_param("ssssssssss", $firstname ,$lastname, $email, $phone , $password , $address , $state , $city , $pincode , $role);  
+            $stmt = $conn->prepare("INSERT INTO users (fname, lname, email, phone,password,addr,state_name,city_name,pincode,role,created_on) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");  
+            $stmt->bind_param("sssssssssss", $firstname ,$lastname, $email, $phone , $password , $address , $state , $city , $pincode , $role,$created_on);  
 
             if($stmt->execute()){  
                 $stmt = $conn->prepare("SELECT id,fname,lname,email,phone,addr,state_name,city_name,pincode,role FROM users WHERE email = ?");   
@@ -70,6 +72,7 @@ if(isset($_GET['apicall'])){
 
     case 'addUser': 
     if(isTheseParametersAvailable(array('firstname','lastname','email','phone','password','address','state','city','pincode'))){  
+        date_default_timezone_set('Asia/Kolkata'); 
         $firstname = $_POST['firstname'];   
         $lastname = $_POST['lastname'];  
         $email = $_POST['email'];   
@@ -79,7 +82,9 @@ if(isset($_GET['apicall'])){
         $state = $_POST['state'];   
         $city = $_POST['city'];   
         $pincode = $_POST['pincode'];  
-        $role = $_POST['role'];     
+        $role = $_POST['role']; 
+        $created_on = date('Y-m-d H:i:s');
+    
 
         $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");  
         $stmt->bind_param("s", $email);  
@@ -92,8 +97,8 @@ if(isset($_GET['apicall'])){
             $stmt->close();  
         }  
         else{  
-            $stmt = $conn->prepare("INSERT INTO users (fname, lname, email, phone,password,addr,state_name,city_name,pincode,role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");  
-            $stmt->bind_param("ssssssssss", $firstname ,$lastname, $email, $phone , $password , $address , $state , $city , $pincode, $role);  
+            $stmt = $conn->prepare("INSERT INTO users (fname, lname, email, phone,password,addr,state_name,city_name,pincode,role,created_on) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");  
+            $stmt->bind_param("sssssssssss", $firstname ,$lastname, $email, $phone , $password , $address , $state , $city , $pincode, $role,$created_on);  
 
             if($stmt->execute()){  
                 $stmt = $conn->prepare("SELECT id,fname,lname,email,phone,addr,state_name,city_name,pincode , role FROM users WHERE email = ?");   
@@ -175,6 +180,7 @@ if(isset($_GET['apicall'])){
     // print_r($_POST);die(); 
     // print_r( $server_ip = gethostbyname(gethostname()));die();
     if(isTheseParametersAvailable(array('name','email','company','phone','address','state','city','pincode','reminderDate','assignTo','id'))){  
+        date_default_timezone_set('Asia/Kolkata'); 
         $name = $_POST['name'];    
         $email = $_POST['email']; 
         $company = $_POST['company'];   
@@ -186,20 +192,22 @@ if(isset($_GET['apicall'])){
         $reminderDate = $_POST['reminderDate'];   
         $assignTo = $_POST['assignTo'];     
         $id = $_POST['id'];
+        $created_on = date('Y-m-d H:i:s');
+
         // $ref_img = $_FILES['pic'];  
         // $images = $_POST['images'];  
         // $videos = $_POST['videos'];  
 
       
 // move_uploaded_file($ref_img['tmp_name'], UPLOAD_PATH . $ref_img['name']);
-        $stmt = $conn->prepare("INSERT INTO activity (activity_name, activity_email,company_name , activity_contact ,activity_addr,state_name,city_name,pincode , reminder_date,assign_to,user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");  
-        $stmt->bind_param("sssssssssss", $name , $email, $company , $phone , $address , $state , $city , $pincode , $reminderDate, $assignTo,$id);  
+        $stmt = $conn->prepare("INSERT INTO activity (activity_name, activity_email,company_name , activity_contact ,activity_addr,state_name,city_name,pincode , reminder_date,assign_to,user_id,created_on,modified_on) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");  
+        $stmt->bind_param("sssssssssssss", $name , $email, $company , $phone , $address , $state , $city , $pincode , $reminderDate, $assignTo,$id,$created_on,$created_on);  
 
         if($stmt->execute()){  
             $last_id = $stmt->insert_id;
 
-            $stmt_log = $conn->prepare("INSERT INTO activity_log (activity_id,activity_name, activity_email,company_name , activity_contact ,activity_addr,state_name,city_name,pincode , reminder_date,assign_to,user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");  
-            $stmt_log->bind_param("ssssssssssss", $last_id, $name , $email, $company , $phone , $address , $state , $city , $pincode , $reminderDate, $assignTo,$id); 
+            $stmt_log = $conn->prepare("INSERT INTO activity_log (activity_id,activity_name, activity_email,company_name , activity_contact ,activity_addr,state_name,city_name,pincode , reminder_date,assign_to,user_id,created_on) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");  
+            $stmt_log->bind_param("sssssssssssss", $last_id, $name , $email, $company , $phone , $address , $state , $city , $pincode , $reminderDate, $assignTo,$id,$created_on); 
             $stmt_log->execute();
 
 
@@ -269,11 +277,11 @@ if(isset($_GET['apicall'])){
 //}  
 break;   
 
-
+     
 
 //--------------------------------------------------------------------------------------------------------------------------------
 
-case 'getAdminActivities':  
+case 'getAdminActivities':         
 
   //if(isTheseParametersAvailable(array('id'))){  
    //WHERE city_name = ?
@@ -467,7 +475,7 @@ case 'getUsers':
   // if(isTheseParametersAvailable(array('id'))){  
    // WHERE city_name = ?
 
-$stmt = $conn->prepare("SELECT id, fname , lname FROM users ");  
+$stmt = $conn->prepare("SELECT id, fname , lname FROM users ORDER BY fname ASC ");  
 $stmt->execute();  
 $stmt_result = $stmt->get_result();
 if($stmt_result->num_rows > 0){  
@@ -498,6 +506,7 @@ break;
 
 case 'editActivities':  
 if(isTheseParametersAvailable(array('act_id','name','email','company','phone','address','state','city','pincode','reminderDate','assignTo','id','status'))){ 
+          date_default_timezone_set('Asia/Kolkata'); 
     $act_id = $_POST['act_id'];    
     $name = $_POST['name'];    
     $email = $_POST['email']; 
@@ -511,13 +520,14 @@ if(isTheseParametersAvailable(array('act_id','name','email','company','phone','a
     $assignTo = $_POST['assignTo'];     
     $id = $_POST['id'];       
     $status = $_POST['status'];       
+        $modified_on = date('Y-m-d H:i:s');
 
 
 
     
-    $stmt = $conn->prepare("UPDATE activity SET activity_name=?, activity_email=?,company_name=? , activity_contact=? ,activity_addr=?,state_name=?,city_name=?,pincode=? , reminder_date=?,assign_to=?,status=? 
+    $stmt = $conn->prepare("UPDATE activity SET activity_name=?, activity_email=?,company_name=? , activity_contact=? ,activity_addr=?,state_name=?,city_name=?,pincode=? , reminder_date=?,assign_to=?,status=?,modified_on=? 
       where activity_id = ? ");
-    $stmt->bind_param("ssssssssssss", $name,$email,$company,$phone,$address,$state,$city,$pincode,$reminderDate,$assignTo,$status,$act_id);  
+    $stmt->bind_param("sssssssssssss", $name,$email,$company,$phone,$address,$state,$city,$pincode,$reminderDate,$assignTo,$status,$modified_on,$act_id);  
     if($stmt->execute()){       
      $stmt_log = $conn->prepare("INSERT INTO activity_log (activity_id,activity_name, activity_email,company_name , activity_contact ,activity_addr,state_name,city_name,pincode , reminder_date,assign_to,user_id,status) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");  
      $stmt_log->bind_param("sssssssssssss", $act_id,$name , $email, $company , $phone , $address , $state , $city , $pincode , $reminderDate, $assignTo,$id,$status);
@@ -547,12 +557,12 @@ case 'getActivitiesReminderNotificationData':
    //WHERE city_name = ?
 $assign_to = $_POST['assign_to'];
 
-$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode from activity where  assign_to = ? AND  DATE(reminder_date) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ");  
+$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode,status,activity_email,company_name,assign_to from activity where  assign_to = ? AND  DATE(reminder_date) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ");  
 $stmt->bind_param("s",$assign_to);  
 $stmt->execute();  
 $stmt_result = $stmt->get_result();
 if($stmt_result->num_rows > 0){  
-    $stmt->bind_result($activity_id,$name,$date,$userid,$phone,$address,$state,$city,$pincode);  
+    $stmt->bind_result($activity_id,$name,$date,$userid,$phone,$address,$state,$city,$pincode,$status,$email,$company,$assign_to);  
     $activity = array();
     while($row_data = $stmt_result->fetch_assoc()){
      $temp = array();
@@ -565,7 +575,10 @@ if($stmt_result->num_rows > 0){
      $temp['state'] = $row_data['state_name']; 
      $temp['city'] = $row_data['city_name']; 
      $temp['pincode'] = $row_data['pincode']; 
-
+     $temp['status'] = $row_data['status']; 
+     $temp['email'] = $row_data['activity_email']; 
+     $temp['company'] = $row_data['company_name']; 
+     $temp['assign_to'] = $row_data['assign_to']; 
 
      array_push($activity, $temp);
 
@@ -596,12 +609,12 @@ case 'getAdminUpcomingActivitiesCount':
    //WHERE city_name = ?
 $user_id = $_POST['user_id'];
 
-$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode from activity where  user_id = ? AND  DATE(reminder_date) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ");  
+$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode,status,activity_email,company_name,assign_to from activity where  user_id = ? AND  DATE(reminder_date) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ");  
 $stmt->bind_param("s",$user_id);  
 $stmt->execute();  
 $stmt_result = $stmt->get_result();
 if($stmt_result->num_rows > 0){  
-    $stmt->bind_result($activity_id,$name,$date,$userid,$phone,$address,$state,$city,$pincode);  
+    $stmt->bind_result($activity_id,$name,$date,$userid,$phone,$address,$state,$city,$pincode,$status,$email,$company,$assign_to);  
     $activity = array();
     while($row_data = $stmt_result->fetch_assoc()){
      $temp = array();
@@ -614,6 +627,10 @@ if($stmt_result->num_rows > 0){
      $temp['state'] = $row_data['state_name']; 
      $temp['city'] = $row_data['city_name']; 
      $temp['pincode'] = $row_data['pincode']; 
+    $temp['status'] = $row_data['status'];
+     $temp['email'] = $row_data['activity_email']; 
+     $temp['company'] = $row_data['company_name']; 
+     $temp['assign_to'] = $row_data['assign_to']; 
 
 
      array_push($activity, $temp);
@@ -635,7 +652,51 @@ break;
 
 
 //--------------------------------------------------------------------------------------------------------------------------------
+case 'getExecutiveUpcomingActivitiesCount':  
 
+  //if(isTheseParametersAvailable(array('id'))){  
+   //WHERE city_name = ?
+$assign_to = $_POST['assign_to'];
+
+$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode,status from activity where  assign_to = ? AND  DATE(reminder_date) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ");  
+$stmt->bind_param("s",$assign_to);  
+$stmt->execute();  
+$stmt_result = $stmt->get_result();
+if($stmt_result->num_rows > 0){  
+    $stmt->bind_result($activity_id,$name,$date,$userid,$phone,$address,$state,$city,$pincode,$status);  
+    $activity = array();
+    while($row_data = $stmt_result->fetch_assoc()){
+     $temp = array();
+     $temp['id'] = $row_data['activity_id']; 
+     $temp['name'] = $row_data['activity_name']; 
+     $temp['date'] = $row_data['reminder_date']; 
+     $temp['userid'] = $row_data['user_id']; 
+     $temp['phone'] = $row_data['activity_contact']; 
+     $temp['address'] = $row_data['activity_addr']; 
+     $temp['state'] = $row_data['state_name']; 
+     $temp['city'] = $row_data['city_name']; 
+     $temp['pincode'] = $row_data['pincode']; 
+    $temp['status'] = $row_data['status']; 
+
+
+     array_push($activity, $temp);
+
+
+ }
+
+ $response['error'] = false;   
+ $response['message'] = 'Reminder date data Fetch successfull';   
+ $response['activity'] = $activity;   
+}  
+else{  
+    $response['error'] = false;   
+    $response['message'] = 'Record not found';  
+}  
+//}  
+break;   
+
+
+//-----------------------------------------------------------------------------------------------------------------------
 case 'getAdminHistory':  
 
   //if(isTheseParametersAvailable(array('id'))){  
@@ -782,12 +843,12 @@ $response['error'] = false;
 case 'getExecutiveDateRangedData':  
 
   //if(isTheseParametersAvailable(array('id'))){  
-   //WHERE city_name = ?
+   //WHERE city_name = ? 
 $assign_to = $_POST['assign_to'];
 $from = $_POST['from'];
 $to = $_POST['to'];
 
-$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode from activity where assign_to = ? AND DATE(fromDate) = ? BETWEEN DATE(toDate) = ? ");  
+$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode from activity where assign_to = ? AND (DATE(reminder_date) BETWEEN ? AND ?) ");  
 $stmt->bind_param("sss",$assign_to,$from,$to);  
 $stmt->execute();  
 $stmt_result = $stmt->get_result();
@@ -831,13 +892,13 @@ case 'getAdminDateRangedData':
 
   //if(isTheseParametersAvailable(array('id'))){  
    //WHERE city_name = ?
-$assign_to = $_POST['assign_to'];
+$id = $_POST['id'];
 $from = $_POST['from'];
 $to = $_POST['to'];
 
 
-$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode from activity where  assign_to = ? AND  DATE(fromDate)=? BETWEEN DATE(toDate)=? ");  
-$stmt->bind_param("sss",$assign_to,$from,$to);  
+$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode from activity where user_id = ? AND (DATE(reminder_date) BETWEEN ? AND ?) ");  
+$stmt->bind_param("sss",$id,$from,$to);  
 $stmt->execute();  
 $stmt_result = $stmt->get_result();
 if($stmt_result->num_rows > 0){  
@@ -1021,6 +1082,70 @@ break;
 //-----------------------------------------------------------------------------------
 
 
+ case 'forgotPassword':  
+
+    if(isTheseParametersAvailable(array('email','phone'))){  
+        $email = $_POST['email'];  
+        $phone = $_POST['phone'];  
+
+
+        $stmt = $conn->prepare("SELECT id, password FROM users WHERE phone = ? and email = ? ");  
+        $stmt->bind_param("ss",$phone,$email);  
+        $stmt->execute();  
+        $stmt->store_result(); 
+
+        if($stmt->num_rows > 0){  
+            $stmt->bind_result($id, $password);  
+            $stmt->fetch();  
+            $user = array(  
+                'id'=>$id,   
+                'password'=>$password    
+            );  
+
+            $response['error'] = false;   
+            $response['message'] = 'Details Matched , Congratulations!!';   
+            $response['user'] = $user;   
+        }  
+        else{  
+            $response['error'] = false;   
+            $response['message'] = 'Either or both email and phone incorrect';  
+        }  
+    }  
+    break; 
+// -----------------------------------------------------------------------------------------------------
+ case 'sendPassword':  
+
+        $password = $_POST['password'];  
+        $tos = $_POST['tos'];  
+
+         $to = $tos;
+         $messageDemo = "your password is  ";
+         $subject = "password recovery";
+
+
+         $message = "<b>Your password is</b>";
+         $message .= $password;
+         
+         $header = "From:myecolods@gmail.com \r\n";
+         //$header .= "Cc:afgh@somedomain.com \r\n";
+         $header .= "MIME-Version: 1.0\r\n";
+         $header .= "Content-type: text/html\r\n";
+         
+         $retval = mail ($to,$subject,$message,$header);
+         
+         if( $retval == true ) {
+            echo "Message sent successfully...";
+         }else {
+            echo "Message could not be sent...";
+         } 
+
+
+      
+    break; 
+
+    //-------------------------------------------------------------------------------------------------------
+
+
 default:   
 $response['error'] = true;   
 $response['message'] = 'Invalid Operation Called';  
@@ -1051,5 +1176,12 @@ function isTheseParametersAvailable($params){
 
 
 
+<!-- // New query -->
+
+<!-- // Old query -->
+
+<!-- SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode from activity where assign_to = ? AND (DATE(reminder_date) BETWEEN ? AND ?) " -->
 
 
+<!-- original query -->
+<!-- "SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode from activity where assign_to = ? AND DATE(reminder_date) = ? BETWEEN DATE(reminder_date) = ?  -->

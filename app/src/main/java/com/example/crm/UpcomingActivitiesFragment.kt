@@ -1,10 +1,10 @@
 package com.example.crm
 
 import android.os.Bundle
+import android.util.Log
+import android.view.*
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.android.volley.AuthFailureError
@@ -15,9 +15,20 @@ import com.example.crm.databinding.FragmentUpcomingActivitiesBinding
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
+import kotlin.collections.ArrayList
 
-class UpcomingActivitiesFragment : Fragment() {
+class UpcomingActivitiesFragment : Fragment()
+{
 lateinit var binding:FragmentUpcomingActivitiesBinding
+    lateinit var fromDate:String
+    lateinit var toDate:String
+    lateinit var from_flag:String
+    lateinit var to_flag:String
+    var searchList =  arrayListOf<EditUpcomingActivitiesData>()
+    lateinit var adapter : UpcomingActivitiesAdapter
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,6 +40,9 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
             container,
             false
         )
+
+
+
 
         if (SharedPrefManager.getInstance(requireActivity()).isLoggedIn)
         {
@@ -44,12 +58,19 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
 
         }
 
+        setHasOptionsMenu(true)
         return binding.root
 
     }
 
+
+
+
+
+
+
     private fun getAdminActiviesNotificationData() {
-        val act_lists = mutableListOf<NotificationReminderData>()
+        val act_lists = mutableListOf<EditUpcomingActivitiesData>()
 
         val calender: Calendar = Calendar.getInstance()
         val stringRequest = object : StringRequest(
@@ -82,7 +103,7 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
 
                         for (i in (array.length()-1) downTo 0 ){
                             val objectArtist = array.getJSONObject(i)
-                            val banners = NotificationReminderData(
+                            val banners = EditUpcomingActivitiesData(
                                 objectArtist.optString("id"),
                                 objectArtist.optString("name"),
                                 objectArtist.optString("date"),
@@ -91,12 +112,16 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
                                 objectArtist.optString("address"),
                                 objectArtist.optString("state"),
                                 objectArtist.optString("city"),
-                                objectArtist.optString("pincode")
-
+                                objectArtist.optString("pincode"),
+                                objectArtist.optString("status"),
+                                objectArtist.optString("email"),
+                                objectArtist.optString("company"),
+                                objectArtist.optString("assign_to")
                             )
 
                             act_lists.add(banners)
-                            val adapter = UpcomingActivitiesAdapter(act_lists)
+                            searchList = act_lists as ArrayList<EditUpcomingActivitiesData>
+                             adapter = UpcomingActivitiesAdapter(act_lists)
                             binding.activitiesRcv.adapter=adapter
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
@@ -151,7 +176,7 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
 
 
     private fun getExecutiveActiviesNotificationData() {
-        val act_lists = mutableListOf<NotificationReminderData>()
+        val act_lists = mutableListOf<EditUpcomingActivitiesData>()
 
         val calender: Calendar = Calendar.getInstance()
         val stringRequest = object : StringRequest(
@@ -179,7 +204,7 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
 
                         for (i in (array.length()-1) downTo 0 ){
                             val objectArtist = array.getJSONObject(i)
-                            val banners = NotificationReminderData(
+                            val banners = EditUpcomingActivitiesData(
                                 objectArtist.optString("id"),
                                 objectArtist.optString("name"),
                                 objectArtist.optString("date"),
@@ -188,12 +213,17 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
                                 objectArtist.optString("address"),
                                 objectArtist.optString("state"),
                                 objectArtist.optString("city"),
-                                objectArtist.optString("pincode")
+                                objectArtist.optString("pincode"),
+                                objectArtist.optString("status"),
+                                objectArtist.optString("email"),
+                                objectArtist.optString("company"),
+                                objectArtist.optString("assign_to")
 
                                 )
 
                             act_lists.add(banners)
-                            val adapter = UpcomingActivitiesAdapter(act_lists)
+                            searchList = act_lists as ArrayList<EditUpcomingActivitiesData>
+                             adapter = UpcomingActivitiesAdapter(act_lists)
                             binding.activitiesRcv.adapter=adapter
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
@@ -247,5 +277,44 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
             .addToRequestQueue(stringRequest)
 
 
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.reset_upcoming_date_data, menu)
+        val item = menu.findItem(R.id.search)
+        val searchView = item.actionView as SearchView
+        searchView.queryHint="Search  activities"
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                activitiesFilter(newText)
+                return true
+            }
+        })
+
+
+    }
+
+    private fun activitiesFilter(newText: String?) {
+            Log.i("@@@@@@@@@@@@@@@@@@@@","$newText")
+        var newFilteredList = arrayListOf<EditUpcomingActivitiesData>()
+
+        for (i in searchList)
+        {
+            if (i.name.contains(newText!!) || i.company.contains(newText!!)){
+                newFilteredList.add(i)
+            }
+        }
+adapter.filtering(newFilteredList)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
     }
 }

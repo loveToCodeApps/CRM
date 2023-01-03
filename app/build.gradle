@@ -59,7 +59,12 @@ dependencies {
     //volley
     implementation 'com.android.volley:volley:1.2.1'
 
-    // material calender  -- source->medium website
+
+
+    // send email automatically
+    implementation files('libs/activation.jar')
+    implementation files('libs/additional.jar')
+    implementation files('libs/mail.jar')
 
 
 

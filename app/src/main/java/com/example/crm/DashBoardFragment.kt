@@ -42,12 +42,14 @@ class DashBoardFragment : Fragment() {
                 SharedPrefManager.getInstance(requireActivity().applicationContext).user.firstName
 
             if (SharedPrefManager.getInstance(requireActivity().applicationContext).user.role == "Admin") {
-              getAdminActivitiesCount()
+
+                getAdminActivitiesCount()
                 getAdminUpcomingActivitiesCount()
                 getAdminActivitiesStatusCounts()
 
             } else if (SharedPrefManager.getInstance(requireActivity().applicationContext).user.role == "Executive") {
                 getExecutiveActivitiesCount()
+                getExecutiveUpcomingActivitiesCount()
                 getExecutiveActivitiesStatusCounts()
 
             }
@@ -94,9 +96,14 @@ class DashBoardFragment : Fragment() {
                                 objectArtist.optString("address"),
                                 objectArtist.optString("state"),
                                 objectArtist.optString("city"),
-                                objectArtist.optString("pincode")
+                                objectArtist.optString("pincode"),
+                                objectArtist.optString("status"),
+                                objectArtist.optString("email"),
+                                objectArtist.optString("company"),
+                                objectArtist.optString("assign_to")
 
-                            )
+
+                                )
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
 //                            calender.set(Calendar.MINUTE,0)
 //                            calender.set(Calendar.SECOND,0)
@@ -145,6 +152,85 @@ class DashBoardFragment : Fragment() {
 
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    private fun getExecutiveUpcomingActivitiesCount() {
+        val calender: Calendar = Calendar.getInstance()
+        val stringRequest = object : StringRequest(
+            Request.Method.POST, URLs.URL_EXECUTIVE_UPCOMING_ACTIVITIES_COUNT,
+            Response.Listener { response ->
+
+                try {
+                    //converting response to json object
+                    val obj = JSONObject(response)
+                    //if no error in response
+                    if (!obj.getBoolean("error")) {
+                        val array = obj.getJSONArray("activity")
+
+                        binding.textView40.text = array.length().toString()
+
+                    } else {
+                        Toast.makeText(
+                            requireActivity().applicationContext,
+                            obj.getString("message"),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            },
+            Response.ErrorListener { error ->
+                Toast.makeText(
+                    requireActivity().applicationContext,
+                    error.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }) {
+
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["assign_to"] =
+                    SharedPrefManager.getInstance(requireActivity().applicationContext).user.firstName+" "+SharedPrefManager.getInstance(requireActivity().applicationContext).user.lastName
+
+                return params
+
+            }
+        }
+
+        VolleySingleton.getInstance(requireActivity().applicationContext)
+            .addToRequestQueue(stringRequest)
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private fun getAdminActivitiesStatusCounts() {
         val stringRequest = object : StringRequest(
@@ -280,7 +366,11 @@ class DashBoardFragment : Fragment() {
                                 objectArtist.optString("address"),
                                 objectArtist.optString("state"),
                                 objectArtist.optString("city"),
-                                objectArtist.optString("pincode")
+                                objectArtist.optString("pincode"),
+                                objectArtist.optString("status"),
+                                objectArtist.optString("email"),
+                                objectArtist.optString("company"),
+                                objectArtist.optString("assign_to")
 
                             )
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
