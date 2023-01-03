@@ -22,10 +22,12 @@ import kotlin.collections.HashMap
 class MyActivityFragment : Fragment() {
 
     lateinit var binding: FragmentMyActivityBinding
+    lateinit var adapter : MyActivitiesAdapter
     lateinit var fromDate:String
     lateinit var toDate:String
     lateinit var from_flag:String
     lateinit var to_flag:String
+
 
 
     //lateinit var act_list:MutableList<MyActivitiesData>
@@ -129,17 +131,18 @@ class MyActivityFragment : Fragment() {
                         val array = obj.getJSONArray("activity")
 //                        binding.textView40.text = array.length().toString()
 
-                        if(array.length()<=0)
-                        {
-                            binding.textView13.visibility=View.VISIBLE
-                            binding.lottieAnimationView.visibility=View.VISIBLE
-                        }
-                        else
-                        {
-                            binding.textView13.visibility=View.INVISIBLE
-                            binding.lottieAnimationView.visibility=View.INVISIBLE
+//                        if(array.length()<=0)
+//                        {
+//                            binding.textView13.visibility=View.VISIBLE
+//                            binding.lottieAnimationView.visibility=View.VISIBLE
+//                        }
+//                        else
+//                        {
+//                            binding.textView13.visibility=View.INVISIBLE
+//                            binding.lottieAnimationView.visibility=View.INVISIBLE
+//
+//                        }
 
-                        }
 
 
 
@@ -162,7 +165,7 @@ class MyActivityFragment : Fragment() {
                             )
 
                             acts_lists.add(banners)
-                            val adapter = MyActivitiesAdapter(acts_lists)
+                             adapter = MyActivitiesAdapter(acts_lists)
                             binding.activitiesRcv.adapter=adapter
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
@@ -233,13 +236,7 @@ class MyActivityFragment : Fragment() {
                         val array = obj.getJSONArray("activity")
 //                        binding.textView40.text = array.length().toString()
 
-                        if (array.length()>0)
-                        {
-                            binding.textView13.visibility=View.INVISIBLE
-                            binding.lottieAnimationView.visibility=View.INVISIBLE
-                            binding.progressBar1.visibility=View.INVISIBLE
 
-                        }
 
 
 
@@ -263,7 +260,7 @@ class MyActivityFragment : Fragment() {
                             )
 
                             act.add(banners)
-                            val adapter = MyActivitiesAdapter(act)
+                             adapter = MyActivitiesAdapter(act)
                             binding.activitiesRcv.adapter=adapter
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
@@ -367,7 +364,7 @@ class MyActivityFragment : Fragment() {
 
                             )
                             acts_list.add(banners)
-                            val adapter = MyActivitiesAdapter(acts_list)
+                             adapter = MyActivitiesAdapter(acts_list)
                             binding.activitiesRcv.adapter=adapter
                         }
                     } else {
@@ -416,6 +413,8 @@ class MyActivityFragment : Fragment() {
 
 
 
+
+
                         if(array.length()<=0)
                         {
                             binding.textView13.visibility=View.VISIBLE
@@ -450,7 +449,7 @@ class MyActivityFragment : Fragment() {
                                 objectArtist.optString("status")
                             )
                             acts_list.add(banners)
-                            val adapter = MyActivitiesAdapter(acts_list)
+                             adapter = MyActivitiesAdapter(acts_list)
                             binding.activitiesRcv.adapter=adapter
                         }
                     } else {

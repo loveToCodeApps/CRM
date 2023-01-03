@@ -1,8 +1,8 @@
 package com.example.crm
 
 object URLs {
-    // private val ROOT_URL = "http://192.168.0.104/crm/registrationapi.php?apicall="
- private val ROOT_URL = "https://ecolods.com/crm_api/registrationapi.php?apicall="
+     private val ROOT_URL = "http://192.168.0.104/crm/registrationapi.php?apicall="
+ //private val ROOT_URL = "https://ecolods.com/crm_api/registrationapi.php?apicall="
 
         val URL_REGISTER = ROOT_URL + "signup"
         val URL_LOGIN = ROOT_URL + "login"
@@ -30,6 +30,15 @@ object URLs {
         val URL_UPLOAD_VIDEO = ROOT_URL + "uploadVideo"
         val URL_GET_ADMIN_DATE_RANGE_DATA = ROOT_URL+ "getAdminDateRangedData"
         val URL_GET_EXECUTIVE_DATE_RANGE_DATA = ROOT_URL+"getExecutiveDateRangedData"
+        val URL_ACTIVITIES_EXECUTIVE_IN_PROGRESS = ROOT_URL + "getExecutiveInProgressData"
+        val URL_ACTIVITIES_ADMIN_IN_PROGRESS = ROOT_URL + "getAdminInProgressData"
+        val URL_ACTIVITIES_ADMIN_COMPLETED = ROOT_URL + "getAdminCompletedData"
+        val URL_ACTIVITIES_EXECUTIVE_COMPLETED = ROOT_URL + "getExecutiveCompletedData"
+        val URL_ACTIVITIES_ADMIN_CANCELLED = ROOT_URL + "getAdminCancelledData"
+        val URL_ACTIVITIES_EXECUTIVE_CANCELLED = ROOT_URL + "getExecutiveCancelledData"
+
+
+
 
 }
 

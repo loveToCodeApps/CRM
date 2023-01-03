@@ -10,22 +10,6 @@
         android:id="@+id/cl1"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp"
-            android:clickable="true"
-            android:contentDescription="history_btn"
-            android:focusable="true"
-            app:backgroundTint="#E85536"
-            app:fabCustomSize="65dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:maxImageSize="35dp"
-            app:srcCompat="@drawable/ic_baseline_history_24"
-            app:tint="#FFFFFF" />
 
         <ScrollView
             android:layout_width="match_parent"

@@ -88,10 +88,32 @@
             android:name="oldData"
             app:argType="com.example.crm.EditUpcomingActivitiesData" />
     </fragment>
+       <fragment
+        android:id="@+id/inprogressFragment"
+        android:name="com.example.crm.InprogressFragment"
+        android:label="In Progress"
+        tools:layout="@layout/fragment_inprogress" >
+           <action
+               android:id="@+id/action_inprogressFragment_to_editUpcomingActivitiesFragment"
+               app:destination="@id/editUpcomingActivitiesFragment" />
+       </fragment>
     <fragment
-        android:id="@+id/forgotPasswordFragment"
-        android:name="com.example.crm.ForgotPasswordFragment"
-        android:label="fragment_forgot_password"
-        tools:layout="@layout/fragment_forgot_password" />
+        android:id="@+id/completedFragment"
+        android:name="com.example.crm.CompletedFragment"
+        android:label="Completed"
+        tools:layout="@layout/fragment_completed" >
+        <action
+            android:id="@+id/action_completedFragment_to_editUpcomingActivitiesFragment"
+            app:destination="@id/editUpcomingActivitiesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cancelledFragment"
+        android:name="com.example.crm.CancelledFragment"
+        android:label="Cancelled"
+        tools:layout="@layout/fragment_cancelled" >
+        <action
+            android:id="@+id/action_cancelledFragment_to_editUpcomingActivitiesFragment"
+            app:destination="@id/editUpcomingActivitiesFragment" />
+    </fragment>
 
 </navigation>

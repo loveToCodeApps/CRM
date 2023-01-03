@@ -64,6 +64,20 @@ class DashBoardFragment : Fragment() {
             findNavController().navigate(R.id.upcomingActivitiesFragment)
 
         }
+        binding.c5.setOnClickListener {
+            findNavController().navigate(R.id.inprogressFragment)
+        }
+
+        binding.c10.setOnClickListener {
+            findNavController().navigate(R.id.completedFragment)
+
+        }
+        binding.c11.setOnClickListener {
+            findNavController().navigate(R.id.cancelledFragment)
+
+        }
+
+
 
         return binding.root
 
@@ -342,6 +356,8 @@ class DashBoardFragment : Fragment() {
     //--------------------------------------------------------------------------------------------------
     private fun getActiviesNotificationData() {
         val calender: Calendar = Calendar.getInstance()
+        var first=" "
+        var last = " "
         val stringRequest = object : StringRequest(
             Request.Method.POST, URLs.URL_ACTIVITIES_REMINDER_NOTIFICATION_DATA,
             Response.Listener { response ->
@@ -387,11 +403,11 @@ class DashBoardFragment : Fragment() {
 //                            binding.activitiesRcv.adapter=adapter
                         }
                     } else {
-                        Toast.makeText(
-                            requireActivity().applicationContext,
-                            obj.getString("message"),
-                            Toast.LENGTH_SHORT
-                        ).show()
+//                        Toast.makeText(
+//                            requireActivity().applicationContext,
+//                            obj.getString("message"),
+//                            Toast.LENGTH_SHORT
+//                        ).show()
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
@@ -407,12 +423,19 @@ class DashBoardFragment : Fragment() {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
+              if (SharedPrefManager.getInstance(requireActivity().applicationContext).isLoggedIn)
+              {
+                  first=SharedPrefManager.getInstance(requireActivity().applicationContext).user.firstName
+                  last= SharedPrefManager.getInstance(requireActivity().applicationContext).user.lastName
+              }
+
                 params["assign_to"] =
-                    SharedPrefManager.getInstance(requireActivity().applicationContext).user.firstName + " " + SharedPrefManager.getInstance(
-                        requireActivity().applicationContext
-                    ).user.lastName
+                  first+" "+last
 
                 return params
+
+
+
 
             }
         }

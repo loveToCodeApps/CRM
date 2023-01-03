@@ -61,11 +61,11 @@ dependencies {
 
 
 
-    // send email automatically
-    implementation files('libs/activation.jar')
-    implementation files('libs/additional.jar')
-    implementation files('libs/mail.jar')
+    implementation 'androidx.multidex:multidex:2.0.1'
+
 
 
 
 }
+
+

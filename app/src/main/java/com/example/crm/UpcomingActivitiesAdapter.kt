@@ -37,7 +37,8 @@ data = newFilteredList
         }
 
         holder.edit.setOnClickListener {
-            it.findNavController().navigate(UpcomingActivitiesFragmentDirections.actionUpcomingActivitiesFragmentToEditUpcomingActivitiesFragment(item))
+
+            it.findNavController().navigate(InprogressFragmentDirections.actionInprogressFragmentToEditUpcomingActivitiesFragment(item))
         }
 
 
