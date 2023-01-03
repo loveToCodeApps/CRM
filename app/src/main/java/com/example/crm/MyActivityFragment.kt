@@ -190,6 +190,8 @@ class MyActivityFragment : Fragment() {
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
+                    binding.activitiesRcv.visibility = View.GONE
+                    binding.textView13.text = "You don't have any activities in the mentioned dates!!"
                     binding.textView13.visibility=View.VISIBLE
                     binding.lottieAnimationView.visibility=View.VISIBLE
                     binding.progressBar1.visibility=View.GONE
@@ -237,11 +239,7 @@ class MyActivityFragment : Fragment() {
 //                        binding.textView40.text = array.length().toString()
 
 
-
-
-
-
-                        for (i in (array.length()-1) downTo 0 ){
+                        for (i in (array.length()-1) downTo 0 ) {
                             val objectArtist = array.getJSONObject(i)
                             val banners = MyActivitiesData(
                                 objectArtist.optString("id"),
@@ -260,8 +258,11 @@ class MyActivityFragment : Fragment() {
                             )
 
                             act.add(banners)
-                             adapter = MyActivitiesAdapter(act)
-                            binding.activitiesRcv.adapter=adapter
+                            adapter = MyActivitiesAdapter(act)
+                            binding.activitiesRcv.adapter = adapter
+
+
+
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
 //                            calender.set(Calendar.MINUTE,0)
@@ -285,6 +286,8 @@ class MyActivityFragment : Fragment() {
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
+                    binding.activitiesRcv.visibility = View.GONE
+                    binding.textView13.text = "You don't have any activities in the mentioned dates!!"
                     binding.textView13.visibility=View.VISIBLE
                     binding.lottieAnimationView.visibility=View.VISIBLE
                     binding.progressBar1.visibility=View.GONE
@@ -524,6 +527,7 @@ class MyActivityFragment : Fragment() {
                     binding.button6.text = "From :"
                     binding.button7.text = "To :"
                   getExecutiveActivities()
+                  binding.activitiesRcv.visibility = View.VISIBLE
                   Snackbar.make(requireActivity().findViewById(android.R.id.content),
                       "Cleared date filter successfully!!", Snackbar.LENGTH_SHORT).show();
 
@@ -538,6 +542,7 @@ class MyActivityFragment : Fragment() {
                   binding.button6.text = "From :"
                   binding.button7.text = "To :"
                   getAdminActivities()
+                  binding.activitiesRcv.visibility = View.VISIBLE
 
                   Snackbar.make(requireActivity().findViewById(android.R.id.content),
                       "Cleared date filter successfully!!", Snackbar.LENGTH_SHORT).show();
