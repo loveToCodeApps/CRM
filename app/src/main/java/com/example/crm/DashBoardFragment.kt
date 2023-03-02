@@ -1,16 +1,27 @@
 package com.example.crm
 
-import android.app.NotificationManager
+
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
+import android.app.appsearch.SetSchemaRequest.READ_EXTERNAL_STORAGE
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.database.Cursor
+import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.android.volley.AuthFailureError
 import com.android.volley.Request
@@ -20,20 +31,64 @@ import com.example.crm.databinding.FragmentDashBoardBinding
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
-import java.util.concurrent.TimeUnit
+
 
 class DashBoardFragment : Fragment() {
 
     lateinit var binding: FragmentDashBoardBinding
+
+    //upload video variables--------------------
+    private val SELECT_VIDEO = 3
+    private var selectedPath: String? = null
+    private val MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1
+
+    private var images:ArrayList<String>?=null
+    private val PICK_IMAGES_CODE = 0
+    lateinit var selectedPicture: String
+    var count = 0
+
+
+    //------------------------------------------
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dash_board, container, false)
+        if (checkConnection(requireContext())) {
+            binding.animationView2.visibility = View.GONE
+            binding.c1.visibility = View.VISIBLE
+            binding.c2.visibility = View.VISIBLE
+            binding.c5.visibility = View.VISIBLE
+            binding.c10.visibility = View.VISIBLE
+            binding.c11.visibility = View.VISIBLE
+            binding.view.visibility = View.VISIBLE
+            binding.textView21.visibility = View.GONE
 
+
+        } else {
+            Toast.makeText(requireContext(), "Bad Connection", Toast.LENGTH_SHORT).show()
+            binding.animationView2.visibility = View.VISIBLE
+            binding.c1.visibility = View.GONE
+            binding.c2.visibility = View.GONE
+            binding.c5.visibility = View.GONE
+            binding.c10.visibility = View.GONE
+            binding.c11.visibility = View.GONE
+            binding.view.visibility = View.GONE
+            binding.textView21.visibility = View.VISIBLE
+
+
+        }
 
         getActiviesNotificationData()
+
+
+        binding.floatingActionButton42.setOnClickListener {
+            it.findNavController().navigate(DashBoardFragmentDirections.actionDashBoardToActivities())
+        }
+
 
 
 
@@ -58,22 +113,22 @@ class DashBoardFragment : Fragment() {
 
 
         binding.cl2.setOnClickListener {
-            findNavController().navigate(R.id.myActivityFragment)
+            findNavController().navigate(DashBoardFragmentDirections.actionDashBoardToMyActivityFragment())
         }
         binding.c2.setOnClickListener {
-            findNavController().navigate(R.id.upcomingActivitiesFragment)
+            findNavController().navigate(DashBoardFragmentDirections.actionDashBoardToUpcomingActivitiesFragment())
 
         }
         binding.c5.setOnClickListener {
-            findNavController().navigate(R.id.inprogressFragment)
+            findNavController().navigate(DashBoardFragmentDirections.actionDashBoardToInprogressFragment())
         }
 
         binding.c10.setOnClickListener {
-            findNavController().navigate(R.id.completedFragment)
+            findNavController().navigate(DashBoardFragmentDirections.actionDashBoardToCompletedFragment())
 
         }
         binding.c11.setOnClickListener {
-            findNavController().navigate(R.id.cancelledFragment)
+            findNavController().navigate(DashBoardFragmentDirections.actionDashBoardToCancelledFragment())
 
         }
 
@@ -117,14 +172,14 @@ class DashBoardFragment : Fragment() {
                                 objectArtist.optString("assign_to")
 
 
-                                )
+                            )
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
 //                            calender.set(Calendar.MINUTE,0)
 //                            calender.set(Calendar.SECOND,0)
 //
 //                            val timer : Timer = Timer()
 //                            timer.schedule(addNotification(banners.name.toString(),banners.date.toString(),i),
-//                            calender.time,TimeUnit.MILLISECONDS.convert(1,TimeUnit.DAYS))
+//                            calender.time, TimeUnit.MILLISECONDS.convert(1,TimeUnit.DAYS))
 
 
 //                            act_list.add(banners)
@@ -168,16 +223,6 @@ class DashBoardFragment : Fragment() {
     }
 
 
-
-
-
-
-
-
-
-
-
-
     private fun getExecutiveUpcomingActivitiesCount() {
         val calender: Calendar = Calendar.getInstance()
         val stringRequest = object : StringRequest(
@@ -216,7 +261,9 @@ class DashBoardFragment : Fragment() {
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
                 params["assign_to"] =
-                    SharedPrefManager.getInstance(requireActivity().applicationContext).user.firstName+" "+SharedPrefManager.getInstance(requireActivity().applicationContext).user.lastName
+                    SharedPrefManager.getInstance(requireActivity().applicationContext).user.firstName + " " + SharedPrefManager.getInstance(
+                        requireActivity().applicationContext
+                    ).user.lastName
 
                 return params
 
@@ -228,22 +275,6 @@ class DashBoardFragment : Fragment() {
 
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private fun getAdminActivitiesStatusCounts() {
@@ -356,7 +387,7 @@ class DashBoardFragment : Fragment() {
     //--------------------------------------------------------------------------------------------------
     private fun getActiviesNotificationData() {
         val calender: Calendar = Calendar.getInstance()
-        var first=" "
+        var first = " "
         var last = " "
         val stringRequest = object : StringRequest(
             Request.Method.POST, URLs.URL_ACTIVITIES_REMINDER_NOTIFICATION_DATA,
@@ -423,18 +454,17 @@ class DashBoardFragment : Fragment() {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
-              if (SharedPrefManager.getInstance(requireActivity().applicationContext).isLoggedIn)
-              {
-                  first=SharedPrefManager.getInstance(requireActivity().applicationContext).user.firstName
-                  last= SharedPrefManager.getInstance(requireActivity().applicationContext).user.lastName
-              }
+                if (SharedPrefManager.getInstance(requireActivity().applicationContext).isLoggedIn) {
+                    first =
+                        SharedPrefManager.getInstance(requireActivity().applicationContext).user.firstName
+                    last =
+                        SharedPrefManager.getInstance(requireActivity().applicationContext).user.lastName
+                }
 
                 params["assign_to"] =
-                  first+" "+last
+                    first + " " + last
 
                 return params
-
-
 
 
             }
@@ -446,14 +476,14 @@ class DashBoardFragment : Fragment() {
 
     }
 
-    private fun addNotification(msg1: String, msg2: String, notifyId: Int) {
-        val builder: NotificationCompat.Builder = NotificationCompat.Builder(requireContext())
-            .setSmallIcon(R.drawable.tps_logo) //set icon for notification
-            .setContentTitle(msg1) //set title of notification
-            .setContentText(msg2)//this is notification message
-            .setAutoCancel(true) // makes auto cancel of notification
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT); //set priority of notification
-
+//    private fun addNotification(msg1: String, msg2: String, notifyId: Int) {
+//        val builder: NotificationCompat.Builder = NotificationCompat.Builder(requireContext())
+//            .setSmallIcon(R.drawable.tps_logo) //set icon for notification
+//            .setContentTitle(msg1) //set title of notification
+//            .setContentText(msg2)//this is notification message
+//            .setAutoCancel(true) // makes auto cancel of notification
+//            .setPriority(NotificationCompat.PRIORITY_DEFAULT); //set priority of notification
+//
 
 //        Intent notificationIntent = new Intent(this, NotificationView.class);
 //        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -463,12 +493,12 @@ class DashBoardFragment : Fragment() {
 //        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
 //        builder.setContentIntent(pendingIntent);
 
-        // Add as notification
-        val manager: NotificationManager =
-            (requireActivity().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)!!
-//            (getSystemService(Context.NOTIFICATION_SERVICE)) as NotificationManager
-        manager.notify(notifyId, builder.build());
-    }
+    // Add as notification
+//        val manager: NotificationManager =
+//            (requireActivity().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)!!
+////            (getSystemService(Context.NOTIFICATION_SERVICE)) as NotificationManager
+//        manager.notify(notifyId, builder.build());
+//    }
 
 
     //------------------------------------------------------------------------------------------------
@@ -532,6 +562,12 @@ class DashBoardFragment : Fragment() {
                     if (!obj.getBoolean("error")) {
 
                         val count = obj.getString("count")
+
+
+                        if (count=="0")
+                        {
+
+                        }
                         binding.textView5.text = count
 
                     } else {
@@ -569,7 +605,79 @@ class DashBoardFragment : Fragment() {
 
     }
 
+    fun checkConnection(context: Context): Boolean {
+        val connMgr =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connMgr != null) {
+            val activeNetworkInfo = connMgr.activeNetworkInfo
+            if (activeNetworkInfo != null) { // connected to the internet
+                // connected to the mobile provider's data plan
+                return if (activeNetworkInfo.type == ConnectivityManager.TYPE_WIFI) {
+                    // connected to wifi
+                    true
+                } else activeNetworkInfo.type == ConnectivityManager.TYPE_MOBILE
+            }
+        }
+        return false
+    }
 
+
+    // video uploading functions
+    private fun chooseVideo() {
+        val intent = Intent()
+        intent.type = "video/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, "Select a Video "), SELECT_VIDEO)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_VIDEO) {
+                println("SELECT_VIDEO")
+                val selectedImageUri: Uri? = data!!.data
+                selectedPath = getPath(selectedImageUri!!)
+               // binding.textView22.setText(selectedPath)
+            }
+        }
+
+    }
+
+
+    //---------------------------------------------------------------------
+    @SuppressLint("Range")
+    open fun getPath(uri: Uri): String {
+        var cursor: Cursor? =
+            requireActivity().getContentResolver().query(uri, null, null, null, null)
+        cursor!!.moveToFirst()
+        var document_id = cursor.getString(0)
+        document_id = document_id.substring(document_id.lastIndexOf(":") + 1)
+        cursor.close()
+        cursor = requireActivity().getContentResolver().query(
+            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+            null, MediaStore.Images.Media._ID + " = ? ", arrayOf(document_id), null
+        )
+        cursor!!.moveToFirst()
+        val path = cursor!!.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA))
+        cursor.close()
+        return path
+    }
+
+
+    fun requestRead() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
+            )
+        } else {
+           chooseVideo()
+        }
+    }
 }
-
 

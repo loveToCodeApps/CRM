@@ -1,15 +1,18 @@
 package com.example.crm
 
+import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 
 
-class UpcomingActivitiesAdapter(var data : List<EditUpcomingActivitiesData>) : RecyclerView.Adapter<UpcomingActivitiesViewHolder>()
+class UpcomingActivitiesAdapter(var data : List<EditUpcomingActivitiesData> , var context : String) : RecyclerView.Adapter<UpcomingActivitiesViewHolder>()
 {
     fun filtering(newFilteredList: ArrayList<EditUpcomingActivitiesData>)
     {
@@ -37,8 +40,29 @@ data = newFilteredList
         }
 
         holder.edit.setOnClickListener {
+            when(context)
+            {
+                "R.id.InProgressFragment"-> it.findNavController().navigate(InprogressFragmentDirections.actionInprogressFragmentToEditUpcomingActivitiesFragment(item))
+                "R.id.CancelledFragment"-> it.findNavController().navigate(CancelledFragmentDirections.actionCancelledFragmentToEditUpcomingActivitiesFragment(item))
+                "R.id.CompletedFragment"-> it.findNavController().navigate(CompletedFragmentDirections.actionCompletedFragmentToEditUpcomingActivitiesFragment(item))
+                "R.id.UpcomingActivitiesFragment"-> it.findNavController().navigate(UpcomingActivitiesFragmentDirections.actionUpcomingActivitiesFragmentToEditUpcomingActivitiesFragment(item))
+            }
+        }
 
-            it.findNavController().navigate(InprogressFragmentDirections.actionInprogressFragmentToEditUpcomingActivitiesFragment(item))
+
+        holder.cardviews.setOnClickListener {
+
+            var address = item.address +" , "+ item.state +" , "+ item.city +" , "+ item.pincode
+          //  it.findNavController().navigate(UpcomingActivitiesFragmentDirections.actionUpcomingActivitiesFragmentToActivityDetailsFragment(item.name.toString(),item.phone.toString(),address,item.date.toString(),item.id.toString()))
+
+            when(context)
+            {
+                "R.id.InProgressFragment"-> it.findNavController().navigate(InprogressFragmentDirections.actionInprogressFragmentToActivityDetailsFragment(item.name.toString(),item.phone.toString(),address,item.date.toString(),item.id.toString()))
+                "R.id.CancelledFragment"-> it.findNavController().navigate(CancelledFragmentDirections.actionCancelledFragmentToActivityDetailsFragment(item.name.toString(),item.phone.toString(),address,item.date.toString(),item.id.toString()))
+                "R.id.CompletedFragment"-> it.findNavController().navigate(CompletedFragmentDirections.actionCompletedFragmentToActivityDetailsFragment(item.name.toString(),item.phone.toString(),address,item.date.toString(),item.id.toString()))
+                "R.id.UpcomingActivitiesFragment"->it.findNavController().navigate(UpcomingActivitiesFragmentDirections.actionUpcomingActivitiesFragmentToActivityDetailsFragment(item.name.toString(),item.phone.toString(),address,item.date.toString(),item.id.toString()))
+
+            }
         }
 
 
@@ -62,6 +86,8 @@ class UpcomingActivitiesViewHolder(itemView: View): RecyclerView.ViewHolder(item
     val date: TextView =itemView.findViewById(R.id.textView18)
     val status:TextView = itemView.findViewById(R.id.mystatus)
     val edit:ImageView = itemView.findViewById(R.id.imageView90)
+    val cardviews: CardView = itemView.findViewById(R.id.card2)
+
 //val idOfActivity:TextView = itemView.findViewById(R.id.activityId)
 
 }

@@ -1,7 +1,9 @@
 package com.example.crm
 
+import android.app.blob.BlobStoreManager
 import android.content.Intent
 import android.os.Bundle
+import android.os.Message
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
@@ -11,9 +13,14 @@ import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
+import com.example.crm.SharedPrefManager.Companion.getInstance
 import com.example.crm.databinding.ActivityForgotPasswordBinding
 import org.json.JSONException
 import org.json.JSONObject
+import papaya.`in`.sendmail.SendMail
+import java.util.*
+import kotlin.collections.HashMap
+
 
 class ForgotPassword : AppCompatActivity() {
     lateinit var binding: ActivityForgotPasswordBinding
@@ -24,12 +31,17 @@ class ForgotPassword : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_forgot_password)
         supportActionBar?.hide()
 
+
+
+
         binding.login.setOnClickListener {
             matchDetails()
         }
         binding.login2.setOnClickListener {
-            sendPassword()
+           // sendPassword()
+            sendMail()
             Toast.makeText(this,"Password sent to your email successfully",Toast.LENGTH_SHORT).show()
+
         }
 
         binding.regis.setOnClickListener {
@@ -39,6 +51,11 @@ class ForgotPassword : AppCompatActivity() {
 
 
     }
+
+    private fun sendMail() {
+
+    }
+
 
     private fun sendPassword() {
 
@@ -185,5 +202,6 @@ class ForgotPassword : AppCompatActivity() {
 
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest)
     }
+
 }
 

@@ -1,6 +1,7 @@
 package com.example.crm
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,7 @@ class InprogressFragment : Fragment() {
 
 lateinit var binding:FragmentInprogressBinding
     lateinit var adapter : UpcomingActivitiesAdapter
-
+var context = "R.id.InProgressFragment"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +32,7 @@ lateinit var binding:FragmentInprogressBinding
 
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_inprogress,container,false)
 
+        Log.i("@@@@", requireContext().toString())
         if (SharedPrefManager.getInstance(requireActivity()).isLoggedIn)
         {
             if (SharedPrefManager.getInstance(requireActivity()).user.role=="Executive")
@@ -104,7 +106,7 @@ lateinit var binding:FragmentInprogressBinding
                             )
 
                             act_lists.add(banners)
-                            adapter = UpcomingActivitiesAdapter(act_lists)
+                            adapter = UpcomingActivitiesAdapter(act_lists,context)
                             binding.activitiesRcv.adapter=adapter
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
@@ -130,6 +132,7 @@ lateinit var binding:FragmentInprogressBinding
                 } catch (e: JSONException) {
                     e.printStackTrace()
                     binding.textView13.visibility=View.VISIBLE
+                    binding.textView13.text="You don't have any activities In Progress yet!!"
                     binding.lottieAnimationView.visibility=View.VISIBLE
                     binding.progressBar1.visibility=View.GONE
 
@@ -205,7 +208,7 @@ lateinit var binding:FragmentInprogressBinding
                             )
 
                             act_lists.add(banners)
-                            adapter = UpcomingActivitiesAdapter(act_lists)
+                            adapter = UpcomingActivitiesAdapter(act_lists,context)
                             binding.activitiesRcv.adapter=adapter
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
@@ -231,6 +234,7 @@ lateinit var binding:FragmentInprogressBinding
                 } catch (e: JSONException) {
                     e.printStackTrace()
                     binding.textView13.visibility=View.VISIBLE
+                    binding.textView13.text="You don't have any activities In Progress yet!!"
                     binding.lottieAnimationView.visibility=View.VISIBLE
                     binding.progressBar1.visibility=View.GONE
                 }

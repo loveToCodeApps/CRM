@@ -20,6 +20,7 @@ import java.util.*
 class CancelledFragment : Fragment() {
     lateinit var binding: FragmentCancelledBinding
     lateinit var adapter : UpcomingActivitiesAdapter
+    var context = "R.id.CancelledFragment"
 
 
     override fun onCreateView(
@@ -95,7 +96,7 @@ class CancelledFragment : Fragment() {
                             )
 
                             act_lists.add(banners)
-                            adapter = UpcomingActivitiesAdapter(act_lists)
+                            adapter = UpcomingActivitiesAdapter(act_lists,context)
                             binding.activitiesRcv.adapter=adapter
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
@@ -121,6 +122,7 @@ class CancelledFragment : Fragment() {
                 } catch (e: JSONException) {
                     e.printStackTrace()
                     binding.textView13.visibility=View.VISIBLE
+                    binding.textView13.text = "You don't have any Cancelled activities yet!!"
                     binding.lottieAnimationView.visibility=View.VISIBLE
                     binding.progressBar1.visibility=View.GONE
 
@@ -198,7 +200,7 @@ class CancelledFragment : Fragment() {
                             )
 
                             act_lists.add(banners)
-                            adapter = UpcomingActivitiesAdapter(act_lists)
+                            adapter = UpcomingActivitiesAdapter(act_lists,context)
                             binding.activitiesRcv.adapter=adapter
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
@@ -224,6 +226,7 @@ class CancelledFragment : Fragment() {
                 } catch (e: JSONException) {
                     e.printStackTrace()
                     binding.textView13.visibility=View.VISIBLE
+                    binding.textView13.text = "You don't have any Cancelled activities yet!!"
                     binding.lottieAnimationView.visibility=View.VISIBLE
                     binding.progressBar1.visibility=View.GONE
                 }

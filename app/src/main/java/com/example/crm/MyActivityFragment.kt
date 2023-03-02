@@ -116,8 +116,10 @@ class MyActivityFragment : Fragment() {
 
     private fun sortActivitiesForAdmin() {
         val acts_lists = mutableListOf<MyActivitiesData>()
-        val from = binding.button6.text
-        val to = binding.button7.text
+        val from = fromDate
+        val to = toDate
+        Log.i("888",from)
+        Log.i("888",to)
         val calender: Calendar = Calendar.getInstance()
         val stringRequest = object : StringRequest(
             Request.Method.POST,  URLs.URL_GET_ADMIN_DATE_RANGE_DATA,
@@ -129,23 +131,7 @@ class MyActivityFragment : Fragment() {
                     //if no error in response
                     if (!obj.getBoolean("error")) {
                         val array = obj.getJSONArray("activity")
-//                        binding.textView40.text = array.length().toString()
-
-//                        if(array.length()<=0)
-//                        {
-//                            binding.textView13.visibility=View.VISIBLE
-//                            binding.lottieAnimationView.visibility=View.VISIBLE
-//                        }
-//                        else
-//                        {
-//                            binding.textView13.visibility=View.INVISIBLE
-//                            binding.lottieAnimationView.visibility=View.INVISIBLE
 //
-//                        }
-
-
-
-
                         for (i in (array.length()-1) downTo 0 ){
                             val objectArtist = array.getJSONObject(i)
                             val banners = MyActivitiesData(
@@ -210,8 +196,8 @@ class MyActivityFragment : Fragment() {
                 val params = java.util.HashMap<String, String>()
                 params["id"] =
                     SharedPrefManager.getInstance(requireActivity().applicationContext).user.id.toString()
-                params["from"] = from.toString()
-                params["to"] = to.toString()
+                params["from"] = from
+                params["to"] = to
                 return params
 
             }
@@ -223,8 +209,8 @@ class MyActivityFragment : Fragment() {
 
     private fun sortActivitiesForExecutive() {
         var act = mutableListOf<MyActivitiesData>()
-        val from = binding.button6.text
-        val to = binding.button7.text
+        val from = fromDate
+        val to = toDate
         val calender: Calendar = Calendar.getInstance()
         val stringRequest = object : StringRequest(
             Request.Method.POST, URLs.URL_GET_EXECUTIVE_DATE_RANGE_DATA,
@@ -337,6 +323,7 @@ class MyActivityFragment : Fragment() {
                         if(array.length()<=0)
                         {
                             binding.textView13.visibility=View.VISIBLE
+                            binding.textView13.text="You don't have any activities added!!"
                             binding.lottieAnimationView.visibility=View.VISIBLE
                         }
                         else
@@ -346,6 +333,8 @@ class MyActivityFragment : Fragment() {
                             binding.progressBar1.visibility=View.GONE
 
                         }
+
+
 
 
                         for (i in (array.length()-1) downTo 0 )
@@ -378,6 +367,9 @@ class MyActivityFragment : Fragment() {
                     binding.textView13.visibility=View.VISIBLE
                     binding.lottieAnimationView.visibility=View.VISIBLE
                     binding.progressBar1.visibility=View.GONE
+                    binding.button6.visibility = View.GONE
+                    binding.button7.visibility = View.GONE
+                    binding.button8.visibility = View.GONE
 
                 }
             },
@@ -421,13 +413,17 @@ class MyActivityFragment : Fragment() {
                         if(array.length()<=0)
                         {
                             binding.textView13.visibility=View.VISIBLE
+                            binding.textView13.text="You don't have any activities added!!"
                             binding.lottieAnimationView.visibility=View.VISIBLE
+
+
                         }
                         else
                         {
                             binding.textView13.visibility=View.INVISIBLE
                             binding.lottieAnimationView.visibility=View.INVISIBLE
                             binding.progressBar1.visibility=View.GONE
+
 
                         }
 
@@ -466,6 +462,9 @@ class MyActivityFragment : Fragment() {
                     binding.textView13.visibility=View.VISIBLE
                     binding.lottieAnimationView.visibility=View.VISIBLE
                     binding.progressBar1.visibility=View.GONE
+                    binding.button6.visibility = View.GONE
+                    binding.button7.visibility = View.GONE
+                    binding.button8.visibility = View.GONE
 
                 }
 
@@ -490,23 +489,28 @@ class MyActivityFragment : Fragment() {
     }
 
     private fun updateFromDateLable(calener: Calendar) {
-        val myFormat = "yyyy-MM-dd"
+        val myFormat = "dd-MM-yyyy"
         val sdf = SimpleDateFormat(myFormat, Locale.UK)
 // Here we can use calendar selected date
         binding.button6.setText((sdf.format(calener.time)))
-        fromDate=(sdf.format(calener.time))
-
+        val myFormat2 = "yyyy-MM-dd"
+        val sdf2 = SimpleDateFormat(myFormat2, Locale.UK)
+        fromDate=(sdf2.format(calener.time))
         Log.i("oooooooooooooooooo",fromDate)
 
 
     }
 
     private fun updateToDateLable(calener: Calendar) {
-        val myFormat = "yyyy-MM-dd"
+        val myFormat = "dd-MM-yyyy"
         val sdf = SimpleDateFormat(myFormat, Locale.UK)
 // Here we can use calendar selected date
         binding.button7.setText((sdf.format(calener.time)))
-        toDate=(sdf.format(calener.time))
+
+
+        val myFormat2 = "yyyy-MM-dd"
+        val sdf2 = SimpleDateFormat(myFormat2, Locale.UK)
+        toDate=(sdf2.format(calener.time))
 
         Log.i("oooooooooooooooooo",toDate)
 

@@ -13,6 +13,54 @@
         <argument
             android:name="activityCount"
             app:argType="string" />
+        <action
+            android:id="@+id/action_dashBoard_to_cancelledFragment"
+            app:destination="@id/cancelledFragment"
+            app:enterAnim="@anim/right_to_center"
+            app:exitAnim="@anim/center_to_left"
+            app:popEnterAnim="@anim/left_to_center"
+            app:popExitAnim="@anim/center_to_right"
+            app:popUpTo="@id/dashBoard" />
+        <action
+            android:id="@+id/action_dashBoard_to_completedFragment"
+            app:destination="@id/completedFragment"
+            app:enterAnim="@anim/right_to_center"
+            app:exitAnim="@anim/center_to_left"
+            app:popEnterAnim="@anim/left_to_center"
+            app:popExitAnim="@anim/center_to_right"
+            app:popUpTo="@id/dashBoard"/>
+        <action
+            android:id="@+id/action_dashBoard_to_inprogressFragment"
+            app:destination="@id/inprogressFragment"
+            app:enterAnim="@anim/right_to_center"
+            app:exitAnim="@anim/center_to_left"
+            app:popEnterAnim="@anim/left_to_center"
+            app:popExitAnim="@anim/center_to_right"
+            app:popUpTo="@id/dashBoard"/>
+        <action
+            android:id="@+id/action_dashBoard_to_upcomingActivitiesFragment"
+            app:destination="@id/upcomingActivitiesFragment"
+            app:enterAnim="@anim/right_to_center"
+            app:exitAnim="@anim/center_to_left"
+            app:popEnterAnim="@anim/left_to_center"
+            app:popExitAnim="@anim/center_to_right"
+            app:popUpTo="@id/dashBoard"/>
+        <action
+            android:id="@+id/action_dashBoard_to_myActivityFragment"
+            app:destination="@id/myActivityFragment"
+            app:enterAnim="@anim/right_to_center"
+            app:exitAnim="@anim/center_to_left"
+            app:popEnterAnim="@anim/left_to_center"
+            app:popExitAnim="@anim/center_to_right"
+            app:popUpTo="@id/dashBoard" />
+        <action
+            android:id="@+id/action_dashBoard_to_activities"
+            app:destination="@id/activities"
+            app:enterAnim="@anim/right_to_center"
+            app:exitAnim="@anim/center_to_left"
+            app:popEnterAnim="@anim/left_to_center"
+            app:popExitAnim="@anim/center_to_right"
+            app:popUpTo="@id/dashBoard" />
     </fragment>
     <fragment
         android:id="@+id/activities"
@@ -31,10 +79,23 @@
         tools:layout="@layout/fragment_my_activity" >
         <action
             android:id="@+id/action_myActivityFragment_to_editMyActivitiesFragment"
-            app:destination="@id/editMyActivitiesFragment" />
+            app:destination="@id/editMyActivitiesFragment"
+            app:enterAnim="@anim/right_to_center"
+            app:exitAnim="@anim/center_to_left"
+            app:popEnterAnim="@anim/left_to_center"
+            app:popExitAnim="@anim/center_to_right"
+            app:popUpTo="@id/myActivityFragment"/>
         <action
             android:id="@+id/action_myActivityFragment_to_dashBoard"
             app:destination="@id/dashBoard" />
+        <action
+            android:id="@+id/action_myActivityFragment_to_activityDetailsFragment"
+            app:destination="@id/activityDetailsFragment"
+            app:enterAnim="@anim/right_to_center"
+            app:exitAnim="@anim/center_to_left"
+            app:popEnterAnim="@anim/left_to_center"
+            app:popExitAnim="@anim/center_to_right"
+            app:popUpTo="@id/myActivityFragment" />
     </fragment>
     <fragment
         android:id="@+id/editMyActivitiesFragment"
@@ -58,13 +119,21 @@
         tools:layout="@layout/fragment_upcoming_activities" >
         <action
             android:id="@+id/action_upcomingActivitiesFragment_to_editUpcomingActivitiesFragment"
-            app:destination="@id/editUpcomingActivitiesFragment" />
+            app:destination="@id/editUpcomingActivitiesFragment"
+            app:enterAnim="@anim/right_to_center"
+            app:exitAnim="@anim/center_to_left"
+            app:popEnterAnim="@anim/left_to_center"
+            app:popExitAnim="@anim/center_to_right"
+            app:popUpTo="@id/upcomingActivitiesFragment"/>
+        <action
+            android:id="@+id/action_upcomingActivitiesFragment_to_activityDetailsFragment"
+            app:destination="@id/activityDetailsFragment"
+            app:enterAnim="@anim/right_to_center"
+            app:exitAnim="@anim/center_to_left"
+            app:popEnterAnim="@anim/left_to_center"
+            app:popExitAnim="@anim/center_to_right"
+            app:popUpTo="@id/upcomingActivitiesFragment"/>
     </fragment>
-    <fragment
-        android:id="@+id/demoFragment"
-        android:name="com.example.crm.demoFragment"
-        android:label="fragment_demo"
-        tools:layout="@layout/fragment_demo" />
     <dialog
         android:id="@+id/historyFragment"
         android:name="com.example.crm.HistoryFragment"
@@ -75,14 +144,9 @@
             app:argType="string" />
     </dialog>
     <fragment
-        android:id="@+id/dateFilterFragment"
-        android:name="com.example.crm.DateFilterFragment"
-        android:label="fragment_date_filter"
-        tools:layout="@layout/fragment_date_filter" />
-    <fragment
         android:id="@+id/editUpcomingActivitiesFragment"
         android:name="com.example.crm.EditUpcomingActivitiesFragment"
-        android:label="Edit Upcoming Activities"
+        android:label="Edit Activities"
         tools:layout="@layout/fragment_edit_upcoming_activities">
         <argument
             android:name="oldData"
@@ -95,7 +159,20 @@
         tools:layout="@layout/fragment_inprogress" >
            <action
                android:id="@+id/action_inprogressFragment_to_editUpcomingActivitiesFragment"
-               app:destination="@id/editUpcomingActivitiesFragment" />
+               app:destination="@id/editUpcomingActivitiesFragment"
+               app:enterAnim="@anim/right_to_center"
+               app:exitAnim="@anim/center_to_left"
+               app:popEnterAnim="@anim/left_to_center"
+               app:popExitAnim="@anim/center_to_right"
+               app:popUpTo="@id/inprogressFragment"/>
+           <action
+               android:id="@+id/action_inprogressFragment_to_activityDetailsFragment"
+               app:destination="@id/activityDetailsFragment"
+               app:enterAnim="@anim/right_to_center"
+               app:exitAnim="@anim/center_to_left"
+               app:popEnterAnim="@anim/left_to_center"
+               app:popExitAnim="@anim/center_to_right"
+               app:popUpTo="@id/inprogressFragment"/>
        </fragment>
     <fragment
         android:id="@+id/completedFragment"
@@ -104,7 +181,20 @@
         tools:layout="@layout/fragment_completed" >
         <action
             android:id="@+id/action_completedFragment_to_editUpcomingActivitiesFragment"
-            app:destination="@id/editUpcomingActivitiesFragment" />
+            app:destination="@id/editUpcomingActivitiesFragment"
+            app:enterAnim="@anim/right_to_center"
+            app:exitAnim="@anim/center_to_left"
+            app:popEnterAnim="@anim/left_to_center"
+            app:popExitAnim="@anim/center_to_right"
+            app:popUpTo="@id/completedFragment"/>
+        <action
+            android:id="@+id/action_completedFragment_to_activityDetailsFragment"
+            app:destination="@id/activityDetailsFragment"
+            app:enterAnim="@anim/right_to_center"
+            app:exitAnim="@anim/center_to_left"
+            app:popEnterAnim="@anim/left_to_center"
+            app:popExitAnim="@anim/center_to_right"
+            app:popUpTo="@id/completedFragment"/>
     </fragment>
     <fragment
         android:id="@+id/cancelledFragment"
@@ -113,7 +203,45 @@
         tools:layout="@layout/fragment_cancelled" >
         <action
             android:id="@+id/action_cancelledFragment_to_editUpcomingActivitiesFragment"
-            app:destination="@id/editUpcomingActivitiesFragment" />
+            app:destination="@id/editUpcomingActivitiesFragment"
+            app:enterAnim="@anim/right_to_center"
+            app:exitAnim="@anim/center_to_left"
+            app:popEnterAnim="@anim/left_to_center"
+            app:popExitAnim="@anim/center_to_right"
+            app:popUpTo="@id/cancelledFragment"/>
+        <action
+            android:id="@+id/action_cancelledFragment_to_activityDetailsFragment"
+            app:destination="@id/activityDetailsFragment"
+            app:enterAnim="@anim/right_to_center"
+            app:exitAnim="@anim/center_to_left"
+            app:popEnterAnim="@anim/left_to_center"
+            app:popExitAnim="@anim/center_to_right"
+            app:popUpTo="@id/cancelledFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/activityDetailsFragment"
+        android:name="com.example.crm.ActivityDetailsFragment"
+        android:label="Activity Details"
+        tools:layout="@layout/fragment_activity_details" >
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="phone"
+            app:argType="string" />
+        <argument
+            android:name="address"
+            app:argType="string" />
+        <argument
+            android:name="date"
+            app:argType="string" />
+        <argument
+            android:name="actid"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_activityDetailsFragment_to_myActivityFragment"
+            app:destination="@id/myActivityFragment"
+            app:popUpTo="@id/dashBoard" />
     </fragment>
 
 </navigation>

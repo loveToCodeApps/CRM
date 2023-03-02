@@ -26,6 +26,7 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
     lateinit var to_flag:String
     var searchList =  arrayListOf<EditUpcomingActivitiesData>()
     lateinit var adapter : UpcomingActivitiesAdapter
+    var context = "R.id.UpcomingActivitiesFragment"
 
 
 
@@ -121,7 +122,7 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
 
                             act_lists.add(banners)
                             searchList = act_lists as ArrayList<EditUpcomingActivitiesData>
-                             adapter = UpcomingActivitiesAdapter(act_lists)
+                             adapter = UpcomingActivitiesAdapter(act_lists,context)
                             binding.activitiesRcv.adapter=adapter
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
@@ -225,7 +226,7 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
 
                             act_lists.add(banners)
                             searchList = act_lists as ArrayList<EditUpcomingActivitiesData>
-                             adapter = UpcomingActivitiesAdapter(act_lists)
+                             adapter = UpcomingActivitiesAdapter(act_lists,context)
                             binding.activitiesRcv.adapter=adapter
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
@@ -311,7 +312,7 @@ lateinit var binding:FragmentUpcomingActivitiesBinding
 
         for (i in searchList)
         {
-            if (i.name.contains(newText!!) || i.company.contains(newText!!)){
+            if (i.name.contains(newText!!,true) || i.company.contains(newText!!,true)){
                 newFilteredList.add(i)
             }
         }

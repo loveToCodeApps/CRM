@@ -27,8 +27,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class EditMyActivitiesFragment : Fragment() {
-lateinit var binding:FragmentEditMyActivitiesBinding
-    lateinit var reminderDate:String
+    lateinit var binding: FragmentEditMyActivitiesBinding
+    lateinit var reminderDate: String
+    lateinit var adapter : MyActivitiesImageAdapter
+
 
 
     override fun onCreateView(
@@ -36,7 +38,7 @@ lateinit var binding:FragmentEditMyActivitiesBinding
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-         binding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_edit_my_activities,
             container,
@@ -46,24 +48,24 @@ lateinit var binding:FragmentEditMyActivitiesBinding
 
 
 
-binding.floatingActionButton4.setOnClickListener {
-   val args = EditMyActivitiesFragmentArgs.fromBundle(requireArguments())
-    it.findNavController().navigate(EditMyActivitiesFragmentDirections.actionEditMyActivitiesFragmentToHistoryFragment(args.oldData.act_id.toString()))
-}
+
+        binding.floatingActionButton4.setOnClickListener {
+            val args = EditMyActivitiesFragmentArgs.fromBundle(requireArguments())
+            it.findNavController().navigate(
+                EditMyActivitiesFragmentDirections.actionEditMyActivitiesFragmentToHistoryFragment(
+                    args.oldData.act_id.toString()
+                )
+            )
+        }
 
 
         // status drop down
         val status = resources.getStringArray(R.array.status)
-        val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_layout,status)
-
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_layout, status)
 
 
         // list of all users in drop down menu
         getUsers()
-
-
-
-
 
 
         val calender = Calendar.getInstance()
@@ -75,35 +77,34 @@ binding.floatingActionButton4.setOnClickListener {
         }
 
 
-            binding.reminder.setOnClickListener {
-                DatePickerDialog(
-                    requireActivity(),
-                    datePicker,
-                    calender.get(Calendar.YEAR),
-                    calender.get(Calendar.MONTH),
-                    calender.get(Calendar.DAY_OF_MONTH)
-                )
-                    .show()
-            }
+        binding.reminder.setOnClickListener {
+            DatePickerDialog(
+                requireActivity(),
+                datePicker,
+                calender.get(Calendar.YEAR),
+                calender.get(Calendar.MONTH),
+                calender.get(Calendar.DAY_OF_MONTH)
+            )
+                .show()
+        }
 
 
-            val args = EditMyActivitiesFragmentArgs.fromBundle(requireArguments())
-              binding.name.setText(args.oldData.act_name)
-              binding.email.setText(args.oldData.act_email)
-              binding.company.setText(args.oldData.act_assign_to)
-              binding.editTextTextPersonName10.setText(args.oldData.act_company)
-              binding.phone.setText(args.oldData.act_phone)
-              binding.address.setText(args.oldData.act_address)
-              binding.state.setText(args.oldData.act_state)
-              binding.city.setText(args.oldData.act_city)
-              binding.pincode.setText(args.oldData.act_pincode)
-              binding.reminder.setText(args.oldData.act_date)
-              binding.activitiesid.setText(args.oldData.act_id)
-              binding.editTextTextPersonName11.setText(args.oldData.act_status)
+        val args = EditMyActivitiesFragmentArgs.fromBundle(requireArguments())
+        binding.name.setText(args.oldData.act_name)
+        binding.email.setText(args.oldData.act_email)
+        binding.company.setText(args.oldData.act_assign_to)
+        binding.editTextTextPersonName10.setText(args.oldData.act_company)
+        binding.phone.setText(args.oldData.act_phone)
+        binding.address.setText(args.oldData.act_address)
+        binding.state.setText(args.oldData.act_state)
+        binding.city.setText(args.oldData.act_city)
+        binding.pincode.setText(args.oldData.act_pincode)
+        binding.reminder.setText(args.oldData.act_date)
+        binding.activitiesid.setText(args.oldData.act_id)
+        binding.editTextTextPersonName11.setText(args.oldData.act_status)
 
 
-      //   88888888888888888888888888888888888888888888888888
-
+        //   88888888888888888888888888888888888888888888888888
 
 
         binding.button.setOnClickListener {
@@ -113,7 +114,6 @@ binding.floatingActionButton4.setOnClickListener {
         }
 
 
-
         // Here don't use binding.autocompletetv.adapter = adapter
         //it will give u error , instead use setAdapter()
         binding.editTextTextPersonName11.setOnClickListener {
@@ -121,13 +121,12 @@ binding.floatingActionButton4.setOnClickListener {
         }
 
 
-   //  binding.editTextTextPersonName11.setText("in progress")
-
+        //  binding.editTextTextPersonName11.setText("in progress")
 
 
         return binding.root
 
-        }
+    }
 
     private fun editActivity() {
 
@@ -244,13 +243,12 @@ binding.floatingActionButton4.setOnClickListener {
                             userJson.getString("address"),
                             userJson.getString("state"),
                             userJson.getString("city"),
-                            userJson.getString("pincode") ,
+                            userJson.getString("pincode"),
                             userJson.getString("reminderDate"),
                             userJson.getString("assignTo")
 
 
                         )
-
 
 
                     } else {
@@ -296,89 +294,22 @@ binding.floatingActionButton4.setOnClickListener {
             }
         }
 
-        VolleySingleton.getInstance(requireActivity().applicationContext).addToRequestQueue(stringRequest)
-
+        VolleySingleton.getInstance(requireActivity().applicationContext)
+            .addToRequestQueue(stringRequest)
 
 
     }
-
-    private fun getUploadedVideo() {
-        val stringRequest = StringRequest(
-            Request.Method.GET,
-            URLs.URL_UPLOAD_VIDEO,
-            { s ->
-                try {
-                    val obj = JSONObject(s)
-                    if (!obj.getBoolean("error")) {
-                        val userJson = obj.getJSONObject("response")
-                        val namee = userJson.getString("video_name")
-                    }  else {
-                        Toast.makeText(
-                            requireContext(),
-                            obj.getString("message"),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            },
-            { volleyError ->
-                Toast.makeText(
-                    requireContext(),
-                    volleyError.message,
-                    Toast.LENGTH_LONG
-                ).show()
-            })
-
-        val requestQueue = Volley.newRequestQueue(requireContext())
-        requestQueue.add(stringRequest)
-    }
-
-    private fun getUploadedImage() {
-        val stringRequest = StringRequest(
-            Request.Method.GET,
-            URLs.URL_UPLOAD_IMAGE,
-            { s ->
-                try {
-                    val obj = JSONObject(s)
-                    if (!obj.getBoolean("error")) {
-                        val userJson = obj.getJSONObject("response")
-                      val namee = userJson.getString("image_name")
-                    }  else {
-                        Toast.makeText(
-                            requireContext(),
-                            obj.getString("message"),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            },
-            { volleyError ->
-                Toast.makeText(
-                    requireContext(),
-                    volleyError.message,
-                    Toast.LENGTH_LONG
-                ).show()
-            })
-
-        val requestQueue = Volley.newRequestQueue(requireContext())
-        requestQueue.add(stringRequest)
-    }
-
 
 
     private fun updateLabel(calener: Calendar) {
-            val myFormat = "dd-MM-yyyy"
-            val sdf = SimpleDateFormat(myFormat, Locale.UK)
+        val myFormat = "dd-MM-yyyy"
+        val sdf = SimpleDateFormat(myFormat, Locale.UK)
 // Here we can use calendar selected date
-            binding.reminder.setText((sdf.format(calener.time)))
-            reminderDate = (sdf.format(calener.time))
+        binding.reminder.setText((sdf.format(calener.time)))
+        reminderDate = (sdf.format(calener.time))
 
-            Log.i("oooooooooooooooooo", reminderDate)
-        }
+        Log.i("oooooooooooooooooo", reminderDate)
+    }
 
 
     private fun getUsers() {
@@ -403,7 +334,11 @@ binding.floatingActionButton4.setOnClickListener {
                             )
 
                             act_list.add(banners.firstName + " " + banners.lastName)
-                            val arrayAdapter = ArrayAdapter(requireContext(),R.layout.assign_to_dropdown_layout,act_list)
+                            val arrayAdapter = ArrayAdapter(
+                                requireContext(),
+                                R.layout.assign_to_dropdown_layout,
+                                act_list
+                            )
                             binding.editTextTextPersonName10.setAdapter(arrayAdapter)
 //                            val adapter = AssignToAdapter(act_list)
 //                            binding.editTextTextPersonName10.adapter = adapter
@@ -430,6 +365,8 @@ binding.floatingActionButton4.setOnClickListener {
         val requestQueue = Volley.newRequestQueue(requireContext())
         requestQueue.add(stringRequest)
     }
+
+
 
 
 }

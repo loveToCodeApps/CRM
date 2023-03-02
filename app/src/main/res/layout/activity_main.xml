@@ -29,13 +29,15 @@
             app:navGraph="@navigation/crm_nav" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/myNavView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/side_drawer"
         app:headerLayout="@layout/header_layout"
-        />
+        app:itemBackground="@drawable/navigation_drawer_item_back"
+        app:menu="@menu/side_drawer" />
 </androidx.drawerlayout.widget.DrawerLayout>
 </layout>
+

@@ -217,7 +217,9 @@ if(isset($_GET['apicall'])){
 
             $response['error'] = false;   
             $response['message'] = 'Activity added successfully';   
-            $response['user'] = "";   
+            $response['user'] = "";  
+             $response['last_id'] = $last_id;  
+
 
         }  
 
@@ -551,14 +553,255 @@ else{
 }  
 break; 
 //---------------------------------------------------------------------------------------------------------------------------------
-case 'getActivitiesReminderNotificationData':  
+case 'getExecutiveInProgressData':   
 
   //if(isTheseParametersAvailable(array('id'))){  
    //WHERE city_name = ?
 $assign_to = $_POST['assign_to'];
 
-$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode,status,activity_email,company_name,assign_to from activity where  assign_to = ? AND  DATE(reminder_date) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ");  
+$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode,status,activity_email,company_name,assign_to from activity where  assign_to = ? AND status='in progress' ");  
 $stmt->bind_param("s",$assign_to);  
+$stmt->execute();  
+$stmt_result = $stmt->get_result();
+if($stmt_result->num_rows > 0){  
+    $stmt->bind_result($activity_id,$name,$date,$userid,$phone,$address,$state,$city,$pincode,$status,$email,$company,$assign_to);  
+    $activity = array();
+    while($row_data = $stmt_result->fetch_assoc()){
+     $temp = array();
+     $temp['id'] = $row_data['activity_id']; 
+     $temp['name'] = $row_data['activity_name']; 
+     $temp['date'] = $row_data['reminder_date']; 
+     $temp['userid'] = $row_data['user_id']; 
+     $temp['phone'] = $row_data['activity_contact']; 
+     $temp['address'] = $row_data['activity_addr']; 
+     $temp['state'] = $row_data['state_name']; 
+     $temp['city'] = $row_data['city_name']; 
+     $temp['pincode'] = $row_data['pincode']; 
+     $temp['status'] = $row_data['status']; 
+     $temp['email'] = $row_data['activity_email']; 
+     $temp['company'] = $row_data['company_name']; 
+     $temp['assign_to'] = $row_data['assign_to']; 
+
+     array_push($activity, $temp);
+
+
+ }
+
+ $response['error'] = false;   
+ $response['message'] = 'Reminder date data Fetch successfull';   
+ $response['activity'] = $activity;   
+}  
+else{  
+    $response['error'] = false;   
+    $response['message'] = 'Record not found';  
+}  
+//}  
+break;   
+
+
+
+//--------------------------------------------------------------------------------------------------------------------------------
+case 'getExecutiveCompletedData':   
+
+  //if(isTheseParametersAvailable(array('id'))){  
+   //WHERE city_name = ?
+$assign_to = $_POST['assign_to'];
+
+$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode,status,activity_email,company_name,assign_to from activity where  assign_to = ? AND status='completed' ");  
+$stmt->bind_param("s",$assign_to);  
+$stmt->execute();  
+$stmt_result = $stmt->get_result();
+if($stmt_result->num_rows > 0){  
+    $stmt->bind_result($activity_id,$name,$date,$userid,$phone,$address,$state,$city,$pincode,$status,$email,$company,$assign_to);  
+    $activity = array();
+    while($row_data = $stmt_result->fetch_assoc()){
+     $temp = array();
+     $temp['id'] = $row_data['activity_id']; 
+     $temp['name'] = $row_data['activity_name']; 
+     $temp['date'] = $row_data['reminder_date']; 
+     $temp['userid'] = $row_data['user_id']; 
+     $temp['phone'] = $row_data['activity_contact']; 
+     $temp['address'] = $row_data['activity_addr']; 
+     $temp['state'] = $row_data['state_name']; 
+     $temp['city'] = $row_data['city_name']; 
+     $temp['pincode'] = $row_data['pincode']; 
+     $temp['status'] = $row_data['status']; 
+     $temp['email'] = $row_data['activity_email']; 
+     $temp['company'] = $row_data['company_name']; 
+     $temp['assign_to'] = $row_data['assign_to']; 
+
+     array_push($activity, $temp);
+
+
+ }
+
+ $response['error'] = false;   
+ $response['message'] = 'Reminder date data Fetch successfull';   
+ $response['activity'] = $activity;   
+}  
+else{  
+    $response['error'] = false;   
+    $response['message'] = 'Record not found';  
+}  
+//}  
+break;   
+
+
+
+//--------------------------------------------------------------------------------------------------------------------------------
+case 'getExecutiveCancelledData':   
+
+  //if(isTheseParametersAvailable(array('id'))){  
+   //WHERE city_name = ?
+$assign_to = $_POST['assign_to'];
+
+$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode,status,activity_email,company_name,assign_to from activity where  assign_to = ? AND status='cancelled' ");  
+$stmt->bind_param("s",$assign_to);  
+$stmt->execute();  
+$stmt_result = $stmt->get_result();
+if($stmt_result->num_rows > 0){  
+    $stmt->bind_result($activity_id,$name,$date,$userid,$phone,$address,$state,$city,$pincode,$status,$email,$company,$assign_to);  
+    $activity = array();
+    while($row_data = $stmt_result->fetch_assoc()){
+     $temp = array();
+     $temp['id'] = $row_data['activity_id']; 
+     $temp['name'] = $row_data['activity_name']; 
+     $temp['date'] = $row_data['reminder_date']; 
+     $temp['userid'] = $row_data['user_id']; 
+     $temp['phone'] = $row_data['activity_contact']; 
+     $temp['address'] = $row_data['activity_addr']; 
+     $temp['state'] = $row_data['state_name']; 
+     $temp['city'] = $row_data['city_name']; 
+     $temp['pincode'] = $row_data['pincode']; 
+     $temp['status'] = $row_data['status']; 
+     $temp['email'] = $row_data['activity_email']; 
+     $temp['company'] = $row_data['company_name']; 
+     $temp['assign_to'] = $row_data['assign_to']; 
+
+     array_push($activity, $temp);
+
+
+ }
+
+ $response['error'] = false;   
+ $response['message'] = 'Reminder date data Fetch successfull';   
+ $response['activity'] = $activity;   
+}  
+else{  
+    $response['error'] = false;   
+    $response['message'] = 'Record not found';  
+}  
+//}  
+break;   
+
+
+
+//--------------------------------------------------------------------------------------------------------------------------------
+case 'getAdminInProgressData':   
+
+  //if(isTheseParametersAvailable(array('id'))){  
+   //WHERE city_name = ?
+$user_id = $_POST['user_id'];
+
+$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode,status,activity_email,company_name,assign_to from activity where   user_id = ? AND status='in progress' ");  
+$stmt->bind_param("s",$user_id);  
+$stmt->execute();  
+$stmt_result = $stmt->get_result();
+if($stmt_result->num_rows > 0){  
+    $stmt->bind_result($activity_id,$name,$date,$userid,$phone,$address,$state,$city,$pincode,$status,$email,$company,$assign_to);  
+    $activity = array();
+    while($row_data = $stmt_result->fetch_assoc()){
+     $temp = array();
+     $temp['id'] = $row_data['activity_id']; 
+     $temp['name'] = $row_data['activity_name']; 
+     $temp['date'] = $row_data['reminder_date']; 
+     $temp['userid'] = $row_data['user_id']; 
+     $temp['phone'] = $row_data['activity_contact']; 
+     $temp['address'] = $row_data['activity_addr']; 
+     $temp['state'] = $row_data['state_name']; 
+     $temp['city'] = $row_data['city_name']; 
+     $temp['pincode'] = $row_data['pincode']; 
+     $temp['status'] = $row_data['status']; 
+     $temp['email'] = $row_data['activity_email']; 
+     $temp['company'] = $row_data['company_name']; 
+     $temp['assign_to'] = $row_data['assign_to']; 
+
+     array_push($activity, $temp);
+
+
+ }
+
+ $response['error'] = false;   
+ $response['message'] = 'Reminder date data Fetch successfull';   
+ $response['activity'] = $activity;   
+}  
+else{  
+    $response['error'] = false;   
+    $response['message'] = 'Record not found';  
+}  
+//}  
+break;   
+
+
+
+//--------------------------------------------------------------------------------------------------------------------------------
+case 'getAdminCompletedData':   
+
+  //if(isTheseParametersAvailable(array('id'))){  
+   //WHERE city_name = ?
+$user_id = $_POST['user_id'];
+
+$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode,status,activity_email,company_name,assign_to from activity where   user_id = ? AND status='completed' ");  
+$stmt->bind_param("s",$user_id);  
+$stmt->execute();  
+$stmt_result = $stmt->get_result();
+if($stmt_result->num_rows > 0){  
+    $stmt->bind_result($activity_id,$name,$date,$userid,$phone,$address,$state,$city,$pincode,$status,$email,$company,$assign_to);  
+    $activity = array();
+    while($row_data = $stmt_result->fetch_assoc()){
+     $temp = array();
+     $temp['id'] = $row_data['activity_id']; 
+     $temp['name'] = $row_data['activity_name']; 
+     $temp['date'] = $row_data['reminder_date']; 
+     $temp['userid'] = $row_data['user_id']; 
+     $temp['phone'] = $row_data['activity_contact']; 
+     $temp['address'] = $row_data['activity_addr']; 
+     $temp['state'] = $row_data['state_name']; 
+     $temp['city'] = $row_data['city_name']; 
+     $temp['pincode'] = $row_data['pincode']; 
+     $temp['status'] = $row_data['status']; 
+     $temp['email'] = $row_data['activity_email']; 
+     $temp['company'] = $row_data['company_name']; 
+     $temp['assign_to'] = $row_data['assign_to']; 
+
+     array_push($activity, $temp);
+
+
+ }
+
+ $response['error'] = false;   
+ $response['message'] = 'Reminder date data Fetch successfull';   
+ $response['activity'] = $activity;   
+}  
+else{  
+    $response['error'] = false;   
+    $response['message'] = 'Record not found';  
+}  
+//}  
+break;   
+
+
+
+//--------------------------------------------------------------------------------------------------------------------------------
+
+case 'getAdminCancelledData':   
+
+  //if(isTheseParametersAvailable(array('id'))){  
+   //WHERE city_name = ?
+$user_id = $_POST['user_id'];
+
+$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode,status,activity_email,company_name,assign_to from activity where   user_id = ? AND status='cancelled' ");  
+$stmt->bind_param("s",$user_id);  
 $stmt->execute();  
 $stmt_result = $stmt->get_result();
 if($stmt_result->num_rows > 0){  
@@ -601,16 +844,17 @@ break;
 //--------------------------------------------------------------------------------------------------------------------------------
 
 
-//--------------------------------------------------------------------------------------------------------------------------------
+
 
 case 'getAdminUpcomingActivitiesCount':  
 
   //if(isTheseParametersAvailable(array('id'))){  
    //WHERE city_name = ?
 $user_id = $_POST['user_id'];
+$progress = "in progress";
 
-$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode,status,activity_email,company_name,assign_to from activity where  user_id = ? AND  DATE(reminder_date) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ");  
-$stmt->bind_param("s",$user_id);  
+$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode,status,activity_email,company_name,assign_to from activity where  user_id = ? AND status =?  AND  DATE(reminder_date) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ");  
+$stmt->bind_param("ss",$user_id,$progress);  
 $stmt->execute();  
 $stmt_result = $stmt->get_result();
 if($stmt_result->num_rows > 0){  
@@ -657,9 +901,10 @@ case 'getExecutiveUpcomingActivitiesCount':
   //if(isTheseParametersAvailable(array('id'))){  
    //WHERE city_name = ?
 $assign_to = $_POST['assign_to'];
+$progress = "in progress";
 
-$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode,status from activity where  assign_to = ? AND  DATE(reminder_date) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ");  
-$stmt->bind_param("s",$assign_to);  
+$stmt = $conn->prepare("SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode,status from activity where  assign_to = ? AND status =? AND  DATE(reminder_date) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ");  
+$stmt->bind_param("ss",$assign_to,$progress);  
 $stmt->execute();  
 $stmt_result = $stmt->get_result();
 if($stmt_result->num_rows > 0){  
@@ -1145,6 +1390,131 @@ break;
 
     //-------------------------------------------------------------------------------------------------------
 
+    case 'uploadPictures':  
+
+if(isTheseParametersAvailable(array('id'))){ 
+    $id = $_POST['id'];    
+    $count = $_POST['count']; 
+     $last = $_POST['last']; 
+       $assign = $_POST['assign']; 
+// print_r($_POST);die();
+   
+  
+  for ($i=0; $i < $count; $i++)
+{
+      $counter = $i + 1;
+    $file_path = "images/" . $id . "_" . $last . "_" . $counter. ".jpg";
+     file_put_contents($file_path, base64_decode($_POST['picture'.$counter]));
+   
+
+    $stmt = $conn->prepare("INSERT INTO pictures (picture,userid,actid,assign_to) VALUES (?,?,?,?)");
+    $stmt->bind_param("ssss", $file_path,$id,$last,$assign);  
+    $stmt->execute();  
+
+} 
+    $stmt->close();   
+  
+    $response['error'] = false;   
+    $response['message'] = 'pictures updated successfully';   
+ 
+}
+else
+{  
+    $response['error'] = true;   
+    $response['message'] = 'required parameters are not available';   
+}  
+
+break; 
+//------------------------------------------------------------------------------------------------//
+case 'getpicturesAdmin':  
+    //print_r($_POST);die();
+    if(isTheseParametersAvailable(array('id'))){  
+        $id = $_POST['id'];  
+         $act_id = $_POST['act_id'];  
+
+        $stmt = $conn->prepare("SELECT picture,id FROM pictures WHERE userid = ? AND actid = ?");  
+        $stmt->bind_param("ss",$id,$act_id);  
+        $stmt->execute(); 
+
+            $stmt_result = $stmt->get_result();
+
+            if($stmt_result->num_rows > 0){  
+        $stmt->bind_result($picture,$id);  
+        $activity = array();
+        while($row_data = $stmt_result->fetch_assoc()){
+         $temp = array();
+         $temp['picture'] = $row_data['picture']; 
+         $temp['id'] = $row_data['id']; 
+
+         array_push($activity, $temp);
+     }
+     $response['error'] = false;   
+     $response['message'] = 'Images Fetch successfull';   
+     $response['activity'] = $activity;   
+ } 
+}
+        else{  
+            $response['error'] = false;   
+            $response['message'] = 'something wrong happened!';  
+        }  
+      
+    break; 
+//-----------------------------------------------------------------------------------------------------
+
+
+case 'getpicturesExecutives':  
+    //print_r($_POST);die();
+    if(isTheseParametersAvailable(array('act_id'))){  
+        $assign_to = $_POST['assign_to'];  
+         $act_id = $_POST['act_id'];  
+
+        $stmt = $conn->prepare("SELECT picture,id FROM pictures WHERE assign_to = ? AND actid = ?");  
+        $stmt->bind_param("ss",$assign_to,$act_id);  
+        $stmt->execute(); 
+
+            $stmt_result = $stmt->get_result();
+
+            if($stmt_result->num_rows > 0){  
+        $stmt->bind_result($picture,$id);  
+        $activity = array();
+        while($row_data = $stmt_result->fetch_assoc()){
+         $temp = array();
+         $temp['picture'] = $row_data['picture']; 
+         $temp['id'] = $row_data['id']; 
+
+         array_push($activity, $temp);
+     }
+     $response['error'] = false;   
+     $response['message'] = 'Images Fetch successfull';   
+     $response['activity'] = $activity;   
+ } 
+}
+        else{  
+            $response['error'] = false;   
+            $response['message'] = 'something wrong happened!';  
+        }  
+      
+    break; 
+//-----------------------------------------------------------------------------------------------------
+
+    case 'deleteImage':
+if(isTheseParametersAvailable(array('id'))){   
+    $id = $_POST['id']; 
+    $stmt = $conn->prepare("DELETE from pictures where id = ?");  
+    $stmt->bind_param("s",$id);  
+    $stmt->execute();  
+// $stmt->store_result(); 
+    $response['error'] = false;   
+    $response['message'] = 'Picture deleted successfull';   
+}  
+else{  
+    $response['error'] = false;   
+    $response['message'] = 'id not passed';  
+}  
+//}  
+//}  
+break; 
+//--------------------------------------------------------------------------------------------------------------------------
 
 default:   
 $response['error'] = true;   
@@ -1175,13 +1545,3 @@ function isTheseParametersAvailable($params){
 
 
 
-
-<!-- // New query -->
-
-<!-- // Old query -->
-
-<!-- SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode from activity where assign_to = ? AND (DATE(reminder_date) BETWEEN ? AND ?) " -->
-
-
-<!-- original query -->
-<!-- "SELECT activity_id,activity_name,reminder_date , user_id,activity_contact,activity_addr,state_name,city_name,pincode from activity where assign_to = ? AND DATE(reminder_date) = ? BETWEEN DATE(reminder_date) = ?  -->

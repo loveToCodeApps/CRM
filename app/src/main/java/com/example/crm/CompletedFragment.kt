@@ -18,8 +18,9 @@ import java.util.*
 
 class CompletedFragment : Fragment() {
 
-lateinit var binding:FragmentCompletedBinding
-lateinit var adapter : UpcomingActivitiesAdapter
+    lateinit var binding: FragmentCompletedBinding
+    lateinit var adapter: UpcomingActivitiesAdapter
+    var context = "R.id.CompletedFragment"
 
 
     override fun onCreateView(
@@ -27,16 +28,12 @@ lateinit var adapter : UpcomingActivitiesAdapter
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_completed,container,false)
-        if (SharedPrefManager.getInstance(requireActivity()).isLoggedIn)
-        {
-            if (SharedPrefManager.getInstance(requireActivity()).user.role=="Executive")
-            {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_completed, container, false)
+        if (SharedPrefManager.getInstance(requireActivity()).isLoggedIn) {
+            if (SharedPrefManager.getInstance(requireActivity()).user.role == "Executive") {
                 getExecutiveCompletedActivities()
 
-            }
-            else if (SharedPrefManager.getInstance(requireActivity()).user.role=="Admin")
-            {
+            } else if (SharedPrefManager.getInstance(requireActivity()).user.role == "Admin") {
                 getAdminCompletedActivities()
             }
 
@@ -53,7 +50,7 @@ lateinit var adapter : UpcomingActivitiesAdapter
 
         val calender: Calendar = Calendar.getInstance()
         val stringRequest = object : StringRequest(
-            Request.Method.POST,  URLs.URL_ACTIVITIES_ADMIN_COMPLETED,
+            Request.Method.POST, URLs.URL_ACTIVITIES_ADMIN_COMPLETED,
             Response.Listener { response ->
 
                 try {
@@ -64,23 +61,20 @@ lateinit var adapter : UpcomingActivitiesAdapter
                         val array = obj.getJSONArray("activity")
 //                        binding.textView40.text = array.length().toString()
 
-                        if(array.length()<=0)
-                        {
-                            binding.textView13.visibility=View.VISIBLE
-                            binding.lottieAnimationView.visibility=View.VISIBLE
-                        }
-                        else
-                        {
-                            binding.textView13.visibility=View.INVISIBLE
-                            binding.lottieAnimationView.visibility=View.INVISIBLE
-                            binding.progressBar1.visibility=View.INVISIBLE
+                        if (array.length() <= 0) {
+                            binding.textView13.visibility = View.VISIBLE
+                            binding.lottieAnimationView.visibility = View.VISIBLE
+                        } else {
+                            binding.textView13.visibility = View.INVISIBLE
+                            binding.lottieAnimationView.visibility = View.INVISIBLE
+                            binding.progressBar1.visibility = View.INVISIBLE
 
 
                         }
 
 
 
-                        for (i in (array.length()-1) downTo 0 ){
+                        for (i in (array.length() - 1) downTo 0) {
                             val objectArtist = array.getJSONObject(i)
                             val banners = EditUpcomingActivitiesData(
                                 objectArtist.optString("id"),
@@ -99,8 +93,8 @@ lateinit var adapter : UpcomingActivitiesAdapter
                             )
 
                             act_lists.add(banners)
-                            adapter = UpcomingActivitiesAdapter(act_lists)
-                            binding.activitiesRcv.adapter=adapter
+                            adapter = UpcomingActivitiesAdapter(act_lists,context)
+                            binding.activitiesRcv.adapter = adapter
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
 //                            calender.set(Calendar.MINUTE,0)
@@ -124,9 +118,10 @@ lateinit var adapter : UpcomingActivitiesAdapter
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
-                    binding.textView13.visibility=View.VISIBLE
-                    binding.lottieAnimationView.visibility=View.VISIBLE
-                    binding.progressBar1.visibility=View.GONE
+                    binding.textView13.visibility = View.VISIBLE
+                    binding.textView13.text = "You don't have any Completed activities yet!!"
+                    binding.lottieAnimationView.visibility = View.VISIBLE
+                    binding.progressBar1.visibility = View.GONE
 
                 }
             },
@@ -149,7 +144,8 @@ lateinit var adapter : UpcomingActivitiesAdapter
         }
 
         VolleySingleton.getInstance(requireActivity().applicationContext)
-            .addToRequestQueue(stringRequest)     }
+            .addToRequestQueue(stringRequest)
+    }
 
     private fun getExecutiveCompletedActivities() {
         val act_lists = mutableListOf<EditUpcomingActivitiesData>()
@@ -167,18 +163,17 @@ lateinit var adapter : UpcomingActivitiesAdapter
                         val array = obj.getJSONArray("activity")
 //                        binding.textView40.text = array.length().toString()
 
-                        if (array.length()>0)
-                        {
-                            binding.textView13.visibility=View.INVISIBLE
-                            binding.lottieAnimationView.visibility=View.INVISIBLE
-                            binding.progressBar1.visibility=View.INVISIBLE
+                        if (array.length() > 0) {
+                            binding.textView13.visibility = View.INVISIBLE
+                            binding.lottieAnimationView.visibility = View.INVISIBLE
+                            binding.progressBar1.visibility = View.INVISIBLE
 
                         }
 
 
 
 
-                        for (i in (array.length()-1) downTo 0 ){
+                        for (i in (array.length() - 1) downTo 0) {
                             val objectArtist = array.getJSONObject(i)
                             val banners = EditUpcomingActivitiesData(
                                 objectArtist.optString("id"),
@@ -198,8 +193,8 @@ lateinit var adapter : UpcomingActivitiesAdapter
                             )
 
                             act_lists.add(banners)
-                            adapter = UpcomingActivitiesAdapter(act_lists)
-                            binding.activitiesRcv.adapter=adapter
+                            adapter = UpcomingActivitiesAdapter(act_lists,context)
+                            binding.activitiesRcv.adapter = adapter
 
 //                            calender.set(Calendar.HOUR_OF_DAY,9)
 //                            calender.set(Calendar.MINUTE,0)
@@ -223,9 +218,10 @@ lateinit var adapter : UpcomingActivitiesAdapter
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
-                    binding.textView13.visibility=View.VISIBLE
-                    binding.lottieAnimationView.visibility=View.VISIBLE
-                    binding.progressBar1.visibility=View.GONE
+                    binding.textView13.visibility = View.VISIBLE
+                    binding.textView13.text = "You don't have any Completed activities yet!!"
+                    binding.lottieAnimationView.visibility = View.VISIBLE
+                    binding.progressBar1.visibility = View.GONE
                 }
             },
             Response.ErrorListener { error ->
@@ -249,7 +245,8 @@ lateinit var adapter : UpcomingActivitiesAdapter
         }
 
         VolleySingleton.getInstance(requireActivity().applicationContext)
-            .addToRequestQueue(stringRequest)    }
+            .addToRequestQueue(stringRequest)
+    }
 
 
 }

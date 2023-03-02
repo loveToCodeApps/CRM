@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -36,6 +37,9 @@ val item = data[position]
             it.findNavController().navigate(MyActivityFragmentDirections.actionMyActivityFragmentToEditMyActivitiesFragment(item))
         }
 
+        holder.cardviews.setOnClickListener {
+            it.findNavController().navigate(MyActivityFragmentDirections.actionMyActivityFragmentToActivityDetailsFragment(item.act_name.toString(),item.act_phone.toString(),item.act_address.toString() +" , "+ item.act_state.toString() +" , "+ item.act_city.toString() +" , "+ item.act_pincode.toString(),item.act_date.toString(),item.act_id.toString()))
+        }
 
 
     }
@@ -55,6 +59,8 @@ val address:TextView=itemView.findViewById(R.id.textView17)
 val date:TextView=itemView.findViewById(R.id.textView18)
 val edit: ImageView = itemView.findViewById(R.id.imageView6)
 val status:TextView = itemView.findViewById(R.id.status)
+val cardviews:CardView = itemView.findViewById(R.id.card1)
+
 //val idOfActivity:TextView = itemView.findViewById(R.id.activityId)
 
 }

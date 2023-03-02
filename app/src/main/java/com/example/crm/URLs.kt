@@ -1,14 +1,14 @@
 package com.example.crm
 
 object URLs {
-     private val ROOT_URL = "http://192.168.0.104/crm/registrationapi.php?apicall="
- //private val ROOT_URL = "https://ecolods.com/crm_api/registrationapi.php?apicall="
+       private val ROOT_URL = "http://192.168.0.107/crm/registrationapi.php?apicall="
+// private val ROOT_URL = "https://ecolods.com/crm_api/registrationapi.php?apicall="
 
         val URL_REGISTER = ROOT_URL + "signup"
         val URL_LOGIN = ROOT_URL + "login"
         val URL_FORGOT_PASSWORD = ROOT_URL + "forgotPassword"
-   val URL_SEND_PASSWORD = ROOT_URL + "sendPassword"
-   val URL_ADD_USER = ROOT_URL + "addUser"
+        val URL_SEND_PASSWORD = ROOT_URL + "sendPassword"
+        val URL_ADD_USER = ROOT_URL + "addUser"
         val URL_ACTIVITIES = ROOT_URL + "activities"
         val URL_ACTIVITIES_REMINDER_NOTIFICATION_DATA = ROOT_URL + "getActivitiesReminderNotificationData"
         val URL_ADMIN_ACTIVITIES_COUNT = ROOT_URL + "adminActivityCount"
@@ -36,6 +36,11 @@ object URLs {
         val URL_ACTIVITIES_EXECUTIVE_COMPLETED = ROOT_URL + "getExecutiveCompletedData"
         val URL_ACTIVITIES_ADMIN_CANCELLED = ROOT_URL + "getAdminCancelledData"
         val URL_ACTIVITIES_EXECUTIVE_CANCELLED = ROOT_URL + "getExecutiveCancelledData"
+        val URL_UPLOAD_PICTURES = ROOT_URL + "uploadPictures"
+        val URL_GET_PICTURES_EXECUTIVES = ROOT_URL + "getpicturesExecutives"
+        val URL_GET_PICTURES_ADMIN = ROOT_URL + "getpicturesAdmin"
+        val URL_DELETE_IMAGE = ROOT_URL + "deleteImage"
+
 
 
 
