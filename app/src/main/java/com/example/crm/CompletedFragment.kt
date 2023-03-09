@@ -14,6 +14,8 @@ import com.android.volley.toolbox.StringRequest
 import com.example.crm.databinding.FragmentCompletedBinding
 import org.json.JSONException
 import org.json.JSONObject
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 class CompletedFragment : Fragment() {
@@ -76,10 +78,17 @@ class CompletedFragment : Fragment() {
 
                         for (i in (array.length() - 1) downTo 0) {
                             val objectArtist = array.getJSONObject(i)
+
+                            val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+                            val outputFormat: DateFormat = SimpleDateFormat("dd-MMM-yyyy")
+                            val inputDateStr = objectArtist.optString("date")
+                            val date: Date = inputFormat.parse(inputDateStr)
+                            val outputDateStr: String = outputFormat.format(date)
+
                             val banners = EditUpcomingActivitiesData(
                                 objectArtist.optString("id"),
                                 objectArtist.optString("name"),
-                                objectArtist.optString("date"),
+                                outputDateStr,
                                 objectArtist.optString("userid"),
                                 objectArtist.optString("phone"),
                                 objectArtist.optString("address"),
@@ -175,10 +184,17 @@ class CompletedFragment : Fragment() {
 
                         for (i in (array.length() - 1) downTo 0) {
                             val objectArtist = array.getJSONObject(i)
+
+                            val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+                            val outputFormat: DateFormat = SimpleDateFormat("dd-MMM-yyyy")
+                            val inputDateStr = objectArtist.optString("date")
+                            val date: Date = inputFormat.parse(inputDateStr)
+                            val outputDateStr: String = outputFormat.format(date)
+
                             val banners = EditUpcomingActivitiesData(
                                 objectArtist.optString("id"),
                                 objectArtist.optString("name"),
-                                objectArtist.optString("date"),
+                                outputDateStr,
                                 objectArtist.optString("userid"),
                                 objectArtist.optString("phone"),
                                 objectArtist.optString("address"),

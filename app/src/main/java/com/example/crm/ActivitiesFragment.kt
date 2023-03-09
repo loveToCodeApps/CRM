@@ -31,14 +31,14 @@ import kotlin.collections.ArrayList
 
 // T
 class ActivitiesFragment : Fragment() {
-lateinit var binding:FragmentActivitiesBinding
-lateinit var reminderDate:String
-var doneVolleyRequest:Boolean=false
-private var images:ArrayList<String>?=null
-private val PICK_IMAGES_CODE = 0
-lateinit var selectedPicture: String
-lateinit var reminderDates:String
-var count = 0
+    lateinit var binding: FragmentActivitiesBinding
+    lateinit var reminderDate: String
+    var doneVolleyRequest: Boolean = false
+    private var images: ArrayList<String>? = null
+    private val PICK_IMAGES_CODE = 0
+    lateinit var selectedPicture: String
+    lateinit var reminderDates: String
+    var count = 0
 
 
     override fun onCreateView(
@@ -46,30 +46,38 @@ var count = 0
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-binding = DataBindingUtil.inflate(inflater,R.layout.fragment_activities,container,false)
-getUsers()
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_activities, container, false)
+        getUsers()
 
         images = ArrayList()
         reminderDates = "00-00-0000"
 
 
+
+
+
         val calender = Calendar.getInstance()
-val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
-    calender.set(Calendar.YEAR,year)
-    calender.set(Calendar.MONTH,month)
-    calender.set(Calendar.DAY_OF_MONTH,dayOfMonth)
-    updateLabel(calender)
-}
+        val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
+            calender.set(Calendar.YEAR, year)
+            calender.set(Calendar.MONTH, month)
+            calender.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            updateLabel(calender)
+        }
 
 
         binding.reminder.setOnClickListener {
-            DatePickerDialog(requireActivity(),datePicker,calender.get(Calendar.YEAR),calender.get(Calendar.MONTH),calender.get(Calendar.DAY_OF_MONTH))
+            DatePickerDialog(
+                requireActivity(),
+                datePicker,
+                calender.get(Calendar.YEAR),
+                calender.get(Calendar.MONTH),
+                calender.get(Calendar.DAY_OF_MONTH)
+            )
                 .show()
         }
 
 
         binding.button.setOnClickListener {
-            binding.progressBar3.visibility = View.VISIBLE
             addActivity()
 
 
@@ -79,9 +87,9 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
         binding.imageView7.setOnClickListener {
             val intent = Intent()
             intent.type = "image/*"
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true)
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(Intent.createChooser(intent,"Select Images"),PICK_IMAGES_CODE)
+            startActivityForResult(Intent.createChooser(intent, "Select Images"), PICK_IMAGES_CODE)
         }
 
         return binding.root
@@ -101,7 +109,7 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
                     if (!obj.getBoolean("error")) {
                         val array = obj.getJSONArray("users")
 
-                        if (SharedPrefManager.getInstance(requireActivity().applicationContext).user.role=="Admin") {
+                        if (SharedPrefManager.getInstance(requireActivity().applicationContext).user.role == "Admin") {
                             for (i in 0 until array.length()) {
                                 val objectArtist = array.getJSONObject(i)
                                 val banners = AssignToData(
@@ -118,15 +126,18 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
                                 )
                                 binding.editTextTextPersonName10.setAdapter(arrayAdapter)
                             }
-                        }
-                        else if ((SharedPrefManager.getInstance(requireActivity().applicationContext).user.role=="Executive"))
-                        {
-                            binding.editTextTextPersonName10.setText(SharedPrefManager.getInstance(requireActivity().applicationContext).user.firstName+" "+SharedPrefManager.getInstance(requireActivity().applicationContext).user.lastName)
+                        } else if ((SharedPrefManager.getInstance(requireActivity().applicationContext).user.role == "Executive")) {
+                            binding.editTextTextPersonName10.setText(
+                                SharedPrefManager.getInstance(
+                                    requireActivity().applicationContext
+                                ).user.firstName + " " + SharedPrefManager.getInstance(
+                                    requireActivity().applicationContext
+                                ).user.lastName
+                            )
                         }
 //                            val adapter = AssignToAdapter(act_list)
 //                            binding.editTextTextPersonName10.adapter = adapter
-                        }
-                     else {
+                    } else {
                         Toast.makeText(
                             requireContext(),
                             obj.getString("message"),
@@ -186,7 +197,7 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
 
         if (TextUtils.isEmpty(company)) {
             binding.company.error = "Please enter company name"
-          binding.company.requestFocus()
+            binding.company.requestFocus()
             return
         }
 
@@ -240,7 +251,7 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
             return
         }
 
-        if (TextUtils.isEmpty(reminderDate) || reminderDate.length==0 || reminderDate==null) {
+        if (TextUtils.isEmpty(reminderDate) || reminderDate.length == 0 || reminderDate == null || reminderDate == "00-00-0000") {
             binding.reminder.error = "Please select reminder date"
             binding.reminder.requestFocus()
             return
@@ -248,6 +259,11 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
 
 
 //        uploadImage
+
+//        if (binding.name.error==null)
+//        {
+        Log.i("777", "volley fired")
+        binding.progressBar3.visibility = View.VISIBLE
 
         val stringRequest = object : StringRequest(
             Request.Method.POST, URLs.URL_ACTIVITIES,
@@ -259,22 +275,19 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
                     //if no error in response
                     if (!obj.getBoolean("error")) {
 
-                      // if there are images call this function
-                        if(images!!.size!=0) {
+                        // if there are images call this function
+                        if (images!!.size != 0) {
                             uploadImages(obj.getString("last_id"), assignTo.toString())
-                        }
-                        else
-                        {
+                        } else {
                             // if no images selected , then go to dashboard directly
-                           binding.progressBar3.visibility = View.GONE
+                            binding.progressBar3.visibility = View.GONE
                             Toast.makeText(
                                 requireActivity().applicationContext,
-                              "Activity successfully added",
+                                "Activity successfully added",
                                 Toast.LENGTH_SHORT
                             ).show()
                             findNavController().navigate(R.id.dashBoard)
                         }
-
 
 
                     } else {
@@ -309,18 +322,17 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
                 params["reminderDate"] = reminderDate
                 params["assignTo"] = assignTo.toString()
                 params["id"] = id.toString()
-             //   params["images"] = img_name.toString()
+                //   params["images"] = img_name.toString()
 //                params["videos"] = vid_name.toString()
-
-
 
 
                 return params
             }
         }
 
-        VolleySingleton.getInstance(requireActivity().applicationContext).addToRequestQueue(stringRequest)
-
+        VolleySingleton.getInstance(requireActivity().applicationContext)
+            .addToRequestQueue(stringRequest)
+        // }
 
 
     }
@@ -328,7 +340,7 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
     private fun uploadImages(last: String, assign: String) {
         val stringRequest = object : StringRequest(
 
-            Request.Method.POST, "http://192.168.0.107/crm/registrationapi.php?apicall=uploadPictures",
+            Request.Method.POST, URLs.URL_UPLOAD_PICTURES,
             Response.Listener { response ->
 
                 try {
@@ -336,13 +348,13 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
                     val obj = JSONObject(response)
                     //if no error in response
                     if (!obj.getBoolean("error")) {
-    //----------------- here put code to go to dashboard
+                        //----------------- here put code to go to dashboard
                         //----------------- here put code to go to dashboard
                         //----------------- here put code to go to dashboard
                         //----------------- here put code to go to dashboard
                         //----------------- here put code to go to dashboardv
                         //----------------- here put code to go to dashboard
-                   binding.progressBar3.visibility = View.GONE
+                        binding.progressBar3.visibility = View.GONE
                         Toast.makeText(
                             requireActivity().applicationContext,
                             "Activity added successfully",
@@ -374,16 +386,16 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
 
                 val params = HashMap<String, String>()
                 params["id"] =
-                        SharedPrefManager.getInstance(requireActivity().applicationContext).user.id.toString()
+                    SharedPrefManager.getInstance(requireActivity().applicationContext).user.id.toString()
                 params["count"] = count.toString()
                 params["last"] = last
                 params["assign"] = assign
-                for(i in 0 ..count-1) {
-                    var numb = (i+1).toString()
+                for (i in 0..count - 1) {
+                    var numb = (i + 1).toString()
                     params["picture$numb"] = images!![i]
 //                      Log.i("888",images!![i])
-                    Log.i("888","picture$numb")
-                    Log.i("888",images!![i])
+                    Log.i("888", "picture$numb")
+                    Log.i("888", images!![i])
                 }
                 // params["picture"] = selectedPicture
                 return params
@@ -403,20 +415,16 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
         val sdf = SimpleDateFormat(myFormat, Locale.UK)
 // Here we can use calendar selected date
         binding.reminder.setText((sdf.format(calener.time)))
-        reminderDate=(sdf.format(calener.time))
-
+        reminderDate = (sdf.format(calener.time))
 
 
         val myFormat2 = "yyyy-MM-dd"
         val sdf2 = SimpleDateFormat(myFormat2, Locale.UK)
-        reminderDates=(sdf2.format(calener.time))
-        Log.i("oooooooooooooooooo",reminderDate)
+        reminderDates = (sdf2.format(calener.time))
+        Log.i("oooooooooooooooooo", reminderDate)
 
 
     }
-
-
-
 
 
     //----------------------------------------------------------------------------------------------------------
@@ -425,41 +433,42 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode==PICK_IMAGES_CODE)
-        {
-            if (resultCode== Activity.RESULT_OK)
-            {
-                if (data!!.clipData!=null)
-                {
+        if (requestCode == PICK_IMAGES_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data!!.clipData != null) {
                     // total images selected
                     count = data.clipData!!.itemCount
 
-                    for(i in 0 until count) {
+                    for (i in 0 until count) {
                         val imgUri = data.clipData!!.getItemAt(i).uri
 
                         val bitmap =
-                            MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, imgUri)
+                            MediaStore.Images.Media.getBitmap(
+                                requireActivity().contentResolver,
+                                imgUri
+                            )
                         val baos = ByteArrayOutputStream()
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos)
                         val imageBytes = baos.toByteArray()
                         selectedPicture =
-                            android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT)
+                            android.util.Base64.encodeToString(
+                                imageBytes,
+                                android.util.Base64.DEFAULT
+                            )
                         val bytesImage: ByteArray =
                             android.util.Base64.decode(selectedPicture, android.util.Base64.DEFAULT)
 
                         images?.add(selectedPicture)
 
 
-
                     }
 
-                        Toast.makeText(requireContext(),"$count images selected",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "$count images selected", Toast.LENGTH_SHORT)
+                        .show()
 
-                }
-
-                else
-                {
-                    Toast.makeText(requireContext(),"only 1 image selected",Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "only 1 image selected", Toast.LENGTH_SHORT)
+                        .show()
                     val imgUri = data.data
 
                     val bitmap =
@@ -481,8 +490,6 @@ val datePicker = DatePickerDialog.OnDateSetListener { datePicker, year, month, d
         }
 
     }
-
-
 
 
 }

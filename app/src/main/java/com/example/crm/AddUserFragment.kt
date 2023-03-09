@@ -185,6 +185,7 @@ val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_layout,roles)
                 params["city"] = city.toString()
                 params["pincode"] = pincode.toString()
                 params["role"] = role.toString()
+                params["added_by"] = SharedPrefManager.getInstance(requireActivity().applicationContext).user.firstName + " " + SharedPrefManager.getInstance(requireActivity().applicationContext).user.lastName
 
                 return params
             }

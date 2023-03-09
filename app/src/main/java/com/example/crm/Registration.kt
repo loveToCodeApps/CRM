@@ -113,29 +113,29 @@ binding = DataBindingUtil.setContentView(this,R.layout.activity_registration)
         }
 
 
-        if (TextUtils.isEmpty(address)) {
-            binding.editTextTextPersonName6.error = "Please enter your address"
-            binding.editTextTextPersonName6.requestFocus()
-            return
-        }
-
-        if (TextUtils.isEmpty(state)) {
-            binding.editTextTextPersonName7.error = "Please enter your state name"
-            binding.editTextTextPersonName7.requestFocus()
-            return
-
-        }
-
-        if (TextUtils.isEmpty(city)) {
-            binding.editTextTextPersonName8.error = "Please enter your city name"
-            binding.editTextTextPersonName8.requestFocus()
-            return
-        }
-        if (TextUtils.isEmpty(pincode)) {
-            binding.editTextTextPersonName9.error = "Please enter your pincode"
-            binding.editTextTextPersonName9.requestFocus()
-            return
-        }
+//        if (TextUtils.isEmpty(address)) {
+//            binding.editTextTextPersonName6.error = "Please enter your address"
+//            binding.editTextTextPersonName6.requestFocus()
+//            return
+//        }
+//
+//        if (TextUtils.isEmpty(state)) {
+//            binding.editTextTextPersonName7.error = "Please enter your state name"
+//            binding.editTextTextPersonName7.requestFocus()
+//            return
+//
+//        }
+//
+//        if (TextUtils.isEmpty(city)) {
+//            binding.editTextTextPersonName8.error = "Please enter your city name"
+//            binding.editTextTextPersonName8.requestFocus()
+//            return
+//        }
+//        if (TextUtils.isEmpty(pincode)) {
+//            binding.editTextTextPersonName9.error = "Please enter your pincode"
+//            binding.editTextTextPersonName9.requestFocus()
+//            return
+//        }
 
         val stringRequest = object : StringRequest(
             Request.Method.POST, URLs.URL_REGISTER,

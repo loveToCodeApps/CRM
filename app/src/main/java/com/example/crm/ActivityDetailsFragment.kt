@@ -63,7 +63,12 @@ class ActivityDetailsFragment : Fragment() {
                             val objectArtist = array.getJSONObject(i)
                             val banners = MyActivitiesImageData(
                                 objectArtist.optString("picture"),
-                                objectArtist.optString("id")
+                                objectArtist.optString("id"),
+                                args.title,
+                                args.phone,
+                                args.address,
+                                args.date,
+                                args.actid
 
                             )
                             acts_list.add(banners)
@@ -123,7 +128,12 @@ class ActivityDetailsFragment : Fragment() {
                             val objectArtist = array.getJSONObject(i)
                             val banners = MyActivitiesImageData(
                                 objectArtist.optString("picture"),
-                                objectArtist.optString("id")
+                                objectArtist.optString("id"),
+                                args.title,
+                                args.phone,
+                                args.address,
+                                args.date,
+                                args.actid
 
                             )
                             acts_list.add(banners)

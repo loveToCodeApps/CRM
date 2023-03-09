@@ -60,7 +60,9 @@ class SharedPrefManager private constructor(context: Context) {
         val editor = sharedPreferences?.edit()
         editor?.clear()
         editor?.apply()
-        ctx?.startActivity(Intent(ctx, Login::class.java))
+        val intent = Intent(ctx,Login::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        ctx?.startActivity(intent)
     }
 
     companion object {

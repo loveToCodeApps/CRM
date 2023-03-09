@@ -239,9 +239,16 @@
             android:name="actid"
             app:argType="string" />
         <action
-            android:id="@+id/action_activityDetailsFragment_to_myActivityFragment"
-            app:destination="@id/myActivityFragment"
-            app:popUpTo="@id/dashBoard" />
+            android:id="@+id/action_activityDetailsFragment_self"
+            app:destination="@id/activityDetailsFragment"
+            app:popUpTo="@id/myActivityFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/addedUsersFragment"
+        android:name="com.example.crm.AddedUsersFragment"
+        android:label="Added Users"
+        tools:layout="@layout/fragment_added_users" />
 
 </navigation>
+
+

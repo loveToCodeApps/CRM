@@ -18,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.app.SharedElementCallback
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -66,8 +67,6 @@ class DashBoardFragment : Fragment() {
             binding.c11.visibility = View.VISIBLE
             binding.view.visibility = View.VISIBLE
             binding.textView21.visibility = View.GONE
-
-
         } else {
             Toast.makeText(requireContext(), "Bad Connection", Toast.LENGTH_SHORT).show()
             binding.animationView2.visibility = View.VISIBLE
@@ -78,9 +77,9 @@ class DashBoardFragment : Fragment() {
             binding.c11.visibility = View.GONE
             binding.view.visibility = View.GONE
             binding.textView21.visibility = View.VISIBLE
-
-
         }
+
+
 
         getActiviesNotificationData()
 
@@ -679,5 +678,7 @@ class DashBoardFragment : Fragment() {
            chooseVideo()
         }
     }
+
+
 }
 

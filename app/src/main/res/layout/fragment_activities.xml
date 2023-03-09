@@ -310,14 +310,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tl3"
                 app:startIconDrawable="@drawable/ic_baseline_person_24"
-                app:startIconTint="#000000">
+                app:startIconTint="#000000"
+                >
 
                 <AutoCompleteTextView
                     android:id="@+id/editTextTextPersonName10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawablePadding="15dp"
-                    android:padding="20dp" />
+                    android:padding="20dp"
+                    android:editable="false"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 

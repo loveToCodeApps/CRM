@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.view.GravityCompat
@@ -22,6 +23,8 @@ import java.util.Calendar
 class MainActivity : AppCompatActivity() {
    lateinit var binding : ActivityMainBinding
     lateinit var drawerLayout: DrawerLayout
+    var backPressedTime: Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -76,7 +79,11 @@ class MainActivity : AppCompatActivity() {
                     binding.myDrawer.closeDrawer(GravityCompat.START, true)
 
                 }
+                R.id.added_users -> {
+                    findNavController(R.id.myNavHost).navigate(R.id.addedUsersFragment)
+                    binding.myDrawer.closeDrawer(GravityCompat.START, true)
 
+                }
             }
             true
         }
@@ -88,6 +95,8 @@ class MainActivity : AppCompatActivity() {
         if(SharedPrefManager.getInstance(this).isLoggedIn) {
             if (SharedPrefManager.getInstance(this).user.role == "Executive") {
                 nav_Menu.findItem(R.id.add_user).isVisible = false
+                nav_Menu.findItem(R.id.added_users).isVisible = false
+
             }
         }
 

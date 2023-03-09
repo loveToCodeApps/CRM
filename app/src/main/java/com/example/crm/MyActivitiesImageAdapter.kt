@@ -24,7 +24,7 @@ import org.json.JSONObject
 class MyActivitiesImageAdapter(var data : List<MyActivitiesImageData>) : RecyclerView.Adapter< MyActivitiesImageViewHolder>()
 {
 
-    var flag = 0
+    var count = data.size
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):  MyActivitiesImageViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.my_activities_image_item_view,parent,false)
@@ -42,23 +42,25 @@ class MyActivitiesImageAdapter(var data : List<MyActivitiesImageData>) : Recycle
 //            .into((holder.image))
 
         Glide.with(holder.image.context)
-            .load("http://192.168.0.107/crm/"+item.url)
+            .load(item.url)
             .into((holder.image))
 
         holder.image.setOnClickListener {
+            Toast.makeText(it.context,"Pinch image to Zoom-In & Zoom-Out",Toast.LENGTH_SHORT).show()
             val mBuilder: AlertDialog.Builder = AlertDialog.Builder(it.context)
             val mView: View =LayoutInflater.from(it.context).inflate(R.layout.dialog_custom_layout,null)
 //            inflate(R.layout.dialog_custom_layout, null)
             val photoView: PhotoView = mView.findViewById(R.id.imageView)
-            Picasso.get().load("http://192.168.0.107/crm/"+item.url).into(photoView)
+            Picasso.get().load(item.url).into(photoView)
             mBuilder.setView(mView)
             val mDialog: AlertDialog = mBuilder.create()
             mDialog.show()
         }
 
+
         holder.delete.setOnClickListener {
 
-            if (flag == 0) {
+            if (count == data.size) {
                 val builder = AlertDialog.Builder(it.context)
                 //set title for alert dialog
                 builder.setTitle("Delete!!")
@@ -69,7 +71,7 @@ class MyActivitiesImageAdapter(var data : List<MyActivitiesImageData>) : Recycle
                 //performing positive action
                 builder.setPositiveButton("Yes") { dialogInterface, which ->
                     // if clicked on yes button we will not show alert on further delete clicks
-                    flag = 1
+
 
                     val stringRequest = object : StringRequest(
                         Request.Method.POST, URLs.URL_DELETE_IMAGE,
@@ -82,6 +84,7 @@ class MyActivitiesImageAdapter(var data : List<MyActivitiesImageData>) : Recycle
                                 if (!obj.getBoolean("error")) {
                                     val array = obj.getJSONArray("user")
                                     Toast.makeText(it.context,"Deleted Image successfully",Toast.LENGTH_SHORT).show()
+
 
 
                                 } else {
@@ -106,20 +109,10 @@ class MyActivitiesImageAdapter(var data : List<MyActivitiesImageData>) : Recycle
                     }
 
                     VolleySingleton.getInstance(it.context).addToRequestQueue(stringRequest)
-
-                    it.findNavController().navigate(ActivityDetailsFragmentDirections.actionActivityDetailsFragmentToMyActivityFragment())
-
+                    it.findNavController().navigate(ActivityDetailsFragmentDirections.actionActivityDetailsFragmentSelf(item.title,item.phone,item.address,item.date,item.actid))
 
 
                 }
-                //performing cancel action
-//                builder.setNeutralButton("Cancel") { dialogInterface, which ->
-//                    Toast.makeText(
-//                        it.context.applicationContext,
-//                        "clicked cancel\n operation cancel",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-//                }
                 //performing negative action
                 builder.setNegativeButton("No") { dialogInterface, which ->
                     Toast.makeText(it.context.applicationContext, "It's ok", Toast.LENGTH_LONG)
@@ -168,8 +161,9 @@ class MyActivitiesImageAdapter(var data : List<MyActivitiesImageData>) : Recycle
                 }
 
                 VolleySingleton.getInstance(it.context).addToRequestQueue(stringRequest)
+                it.findNavController().navigate(ActivityDetailsFragmentDirections.actionActivityDetailsFragmentSelf(item.title,item.phone,item.address,item.date,item.actid))
 
-                it.findNavController().navigate(ActivityDetailsFragmentDirections.actionActivityDetailsFragmentToMyActivityFragment())
+
 
             }
         }

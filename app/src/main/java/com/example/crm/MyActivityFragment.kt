@@ -4,20 +4,18 @@ import android.app.DatePickerDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
+import androidx.fragment.app.Fragment
 import com.android.volley.*
 import com.android.volley.toolbox.StringRequest
 import com.example.crm.databinding.FragmentMyActivityBinding
 import com.google.android.material.snackbar.Snackbar
 import org.json.JSONException
 import org.json.JSONObject
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 class MyActivityFragment : Fragment() {
 
@@ -339,7 +337,15 @@ class MyActivityFragment : Fragment() {
 
                         for (i in (array.length()-1) downTo 0 )
                          {
+
                             val objectArtist = array.getJSONObject(i)
+
+                             val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+                             val outputFormat: DateFormat = SimpleDateFormat("dd-MMM-yyyy")
+                             val inputDateStr = objectArtist.optString("date")
+                             val date: Date = inputFormat.parse(inputDateStr)
+                             val outputDateStr: String = outputFormat.format(date)
+
                             val banners = MyActivitiesData(
                                 objectArtist.optString("id"),
                                 objectArtist.optString("name"),
@@ -348,7 +354,7 @@ class MyActivityFragment : Fragment() {
                                 objectArtist.optString("state"),
                                 objectArtist.optString("city"),
                                 objectArtist.optString("pincode"),
-                                objectArtist.optString("date"),
+                                outputDateStr,
                                 objectArtist.optString("email"),
                                 objectArtist.optString("company"),
                                 objectArtist.optString("assignTo"),
@@ -433,6 +439,14 @@ class MyActivityFragment : Fragment() {
 
                         for (i in (array.length()-1) downTo 0) {
                             val objectArtist = array.getJSONObject(i)
+
+                            val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+                            val outputFormat: DateFormat = SimpleDateFormat("dd-MMM-yyyy")
+                            val inputDateStr = objectArtist.optString("date")
+                            val date: Date = inputFormat.parse(inputDateStr)
+                            val outputDateStr: String = outputFormat.format(date)
+
+
                             val banners = MyActivitiesData(
                                 objectArtist.optString("id"),
                                 objectArtist.optString("name"),
@@ -441,7 +455,7 @@ class MyActivityFragment : Fragment() {
                                 objectArtist.optString("state"),
                                 objectArtist.optString("city"),
                                 objectArtist.optString("pincode"),
-                                objectArtist.optString("date"),
+                                outputDateStr,
                                 objectArtist.optString("email"),
                                 objectArtist.optString("company"),
                                 objectArtist.optString("assignTo"),
