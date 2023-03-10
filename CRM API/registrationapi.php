@@ -83,6 +83,7 @@ if(isset($_GET['apicall'])){
         $city = $_POST['city'];   
         $pincode = $_POST['pincode'];  
         $role = $_POST['role']; 
+        $added_by = $_POST['added_by']; 
         $created_on = date('Y-m-d H:i:s');
     
 
@@ -97,8 +98,8 @@ if(isset($_GET['apicall'])){
             $stmt->close();  
         }  
         else{  
-            $stmt = $conn->prepare("INSERT INTO users (fname, lname, email, phone,password,addr,state_name,city_name,pincode,role,created_on) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");  
-            $stmt->bind_param("sssssssssss", $firstname ,$lastname, $email, $phone , $password , $address , $state , $city , $pincode, $role,$created_on);  
+            $stmt = $conn->prepare("INSERT INTO users (fname, lname, email, phone,password,addr,state_name,city_name,pincode,role,created_on,added_by) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");  
+            $stmt->bind_param("ssssssssssss", $firstname ,$lastname, $email, $phone , $password , $address , $state , $city , $pincode, $role,$created_on,$added_by);  
 
             if($stmt->execute()){  
                 $stmt = $conn->prepare("SELECT id,fname,lname,email,phone,addr,state_name,city_name,pincode , role FROM users WHERE email = ?");   
@@ -290,7 +291,7 @@ case 'getAdminActivities':
 $id = $_POST['id'];  
 $assign_to = $_POST['assign_to'];
 
-$stmt = $conn->prepare("SELECT activity_id, activity_name,activity_contact,activity_addr, state_name, city_name , pincode , reminder_date , company_name , activity_email , assign_to , status FROM activity where user_id = ? ");  
+$stmt = $conn->prepare("SELECT activity_id, activity_name,activity_contact,activity_addr, state_name, city_name , pincode , reminder_date , company_name , activity_email , assign_to , status FROM activity");  
 $stmt->bind_param("s",$id);  
 $stmt->execute();  
 $stmt_result = $stmt->get_result();
@@ -1361,31 +1362,24 @@ break;
  case 'sendPassword':  
 
         $password = $_POST['password'];  
-        $tos = $_POST['tos'];  
+        $to = $_POST['tos'];  
+        $email = "myecolods@gmail.com";
+        $subject = "Password Recovery";
+        $headers = "From: $firstname";
+        $message = " Your password is ".$password;
+        $firstname = "CRM";
+        $lastname = "App";
+        $headers .= " : $subject ".$email."\r\n";
+        $body ="Hello Sir,\n\nFROM: $firstname $lastname\n\nE-MAIL: $email\n\nSUBJECT: $subject\n\nMESSAGE: $message";
+        
+// If there are no errors, send the email
 
-         $to = $tos;
-         $messageDemo = "your password is  ";
-         $subject = "password recovery";
-
-
-         $message = "<b>Your password is</b>";
-         $message .= $password;
-         
-         $header = "From:myecolods@gmail.com \r\n";
-         //$header .= "Cc:afgh@somedomain.com \r\n";
-         $header .= "MIME-Version: 1.0\r\n";
-         $header .= "Content-type: text/html\r\n";
-         
-         $retval = mail ($to,$subject,$message,$header);
-         
-         if( $retval == true ) {
-            echo "Message sent successfully...";
-         }else {
-            echo "Message could not be sent...";
-         } 
-
-
-      
+    $success = mail ($to, $subject, $body, $headers);
+    if (!$success) {
+    $errorMessage = error_get_last()['message'];die();
+}else{
+    echo "Message sent successfully...";
+    }  
     break; 
 
     //-------------------------------------------------------------------------------------------------------
@@ -1443,7 +1437,7 @@ case 'getpicturesAdmin':
         $activity = array();
         while($row_data = $stmt_result->fetch_assoc()){
          $temp = array();
-         $temp['picture'] = $row_data['picture']; 
+         $temp['picture'] = UPLOADPATH.$row_data['picture']; 
          $temp['id'] = $row_data['id']; 
 
          array_push($activity, $temp);
@@ -1479,7 +1473,7 @@ case 'getpicturesExecutives':
         $activity = array();
         while($row_data = $stmt_result->fetch_assoc()){
          $temp = array();
-         $temp['picture'] = $row_data['picture']; 
+         $temp['picture'] = UPLOADPATH.$row_data['picture']; 
          $temp['id'] = $row_data['id']; 
 
          array_push($activity, $temp);
@@ -1515,6 +1509,46 @@ else{
 //}  
 break; 
 //--------------------------------------------------------------------------------------------------------------------------
+
+case 'getAddedUsers':         
+
+  //if(isTheseParametersAvailable(array('id'))){  
+   //WHERE city_name = ?
+$added_by = $_POST['added_by'];  
+
+$stmt = $conn->prepare("SELECT fname,lname,email,phone,role FROM users where added_by = ? ");  
+$stmt->bind_param("s",$added_by);  
+$stmt->execute();  
+$stmt_result = $stmt->get_result();
+if($stmt_result->num_rows > 0){  
+    $stmt->bind_result($fname,$lname,$email,$phone,$role);  
+    $activity = array();
+    while($row_data = $stmt_result->fetch_assoc()){
+     $temp = array();
+     $temp['fname'] = $row_data['fname']; 
+     $temp['lname'] = $row_data['lname']; 
+     $temp['email'] = $row_data['email']; 
+     $temp['phone'] = $row_data['phone']; 
+     $temp['role'] = $row_data['role']; 
+    
+     array_push($activity, $temp);
+
+ }
+
+ $response['error'] = false;   
+ $response['message'] = 'Added Users Fetch successfull';   
+ $response['activity'] = $activity;   
+}  
+else{  
+    $response['error'] = false;   
+    $response['message'] = 'Record not found';  
+}  
+//}  
+break;   
+
+
+
+//--------------------------------------------------------------------------------------------------------------------------------
 
 default:   
 $response['error'] = true;   

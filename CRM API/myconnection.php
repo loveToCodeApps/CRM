@@ -10,7 +10,8 @@ if ($conn->connect_error) {
 }  
 
  define("IMGPATH", "https://affetta.com/cms/");
- define("UPLOADPATH", "http://192.168.0.107/crm/");
+  define("UPLOADPATH", "http://192.168.0.107/crm/");
+ // define("UPLOADPATH", "https://ecolods.com/crm_api/");
 
 
   // define("VIDEO_UPLOAD_PATH", "videos/");

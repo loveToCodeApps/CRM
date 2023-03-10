@@ -1,25 +1,15 @@
 package com.example.crm
 
 
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.annotation.SuppressLint
-import android.app.Activity.RESULT_OK
-import android.app.appsearch.SetSchemaRequest.READ_EXTERNAL_STORAGE
+
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.database.Cursor
 import android.net.ConnectivityManager
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.app.SharedElementCallback
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -28,6 +18,9 @@ import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
+import com.applandeo.materialcalendarview.EventDay
+import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.example.crm.databinding.FragmentDashBoardBinding
 import org.json.JSONException
 import org.json.JSONObject
@@ -47,6 +40,7 @@ class DashBoardFragment : Fragment() {
     private val PICK_IMAGES_CODE = 0
     lateinit var selectedPicture: String
     var count = 0
+//    lateinit var events:ArrayList<Calendar>
 
 
     //------------------------------------------
@@ -58,6 +52,31 @@ class DashBoardFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dash_board, container, false)
+
+
+
+
+
+//         events = ArrayList()
+//
+//        val calendar = Calendar.getInstance()
+//      //  events.add(EventDay(calendar, R.drawable.history_dialog))
+//        events.add(calendar)
+//
+//        //binding.calendarView.setEvents(events)
+//        binding.calendarView.setHighlightedDays(events)
+//
+//
+//        binding.calendarView.setOnDayClickListener(object : OnDayClickListener {
+//            override fun onDayClick(eventDay: EventDay) {
+//                val clickedDayCalendar = eventDay.calendar
+//
+//
+//            }
+//        })
+
+
+        // Later uncomment the code
         if (checkConnection(requireContext())) {
             binding.animationView2.visibility = View.GONE
             binding.c1.visibility = View.VISIBLE
@@ -130,6 +149,28 @@ class DashBoardFragment : Fragment() {
             findNavController().navigate(DashBoardFragmentDirections.actionDashBoardToCancelledFragment())
 
         }
+
+
+
+        // listners for custom calendarview
+
+      //previous button
+//        binding.calendarView.setOnPreviousPageChangeListener(object : OnCalendarPageChangeListener {
+//            override fun onChange() {
+//              Toast.makeText(requireContext(),"   Previous   ",Toast.LENGTH_SHORT).show()
+//            }
+//        });
+
+        // next button
+//        binding.calendarView.setOnForwardPageChangeListener(object : OnCalendarPageChangeListener {
+//            override fun onChange() {
+//                Toast.makeText(requireContext(),"    Next    ",Toast.LENGTH_SHORT).show()
+//            }
+//        });
+
+
+
+
 
 
 
@@ -620,64 +661,6 @@ class DashBoardFragment : Fragment() {
         return false
     }
 
-
-    // video uploading functions
-    private fun chooseVideo() {
-        val intent = Intent()
-        intent.type = "video/*"
-        intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(intent, "Select a Video "), SELECT_VIDEO)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_VIDEO) {
-                println("SELECT_VIDEO")
-                val selectedImageUri: Uri? = data!!.data
-                selectedPath = getPath(selectedImageUri!!)
-               // binding.textView22.setText(selectedPath)
-            }
-        }
-
-    }
-
-
-    //---------------------------------------------------------------------
-    @SuppressLint("Range")
-    open fun getPath(uri: Uri): String {
-        var cursor: Cursor? =
-            requireActivity().getContentResolver().query(uri, null, null, null, null)
-        cursor!!.moveToFirst()
-        var document_id = cursor.getString(0)
-        document_id = document_id.substring(document_id.lastIndexOf(":") + 1)
-        cursor.close()
-        cursor = requireActivity().getContentResolver().query(
-            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-            null, MediaStore.Images.Media._ID + " = ? ", arrayOf(document_id), null
-        )
-        cursor!!.moveToFirst()
-        val path = cursor!!.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA))
-        cursor.close()
-        return path
-    }
-
-
-    fun requestRead() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                android.Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                requireActivity(), arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
-            )
-        } else {
-           chooseVideo()
-        }
-    }
 
 
 }
